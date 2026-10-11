@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7d1a1a">
+  <title>Blood on the Clocktower - Database Integrato</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, serif;
+      background: #efe6d2;
+      color: #2b1d14;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { color: #9a6b1c; text-align: center; margin-bottom: 30px; }
+    .status {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status.connected {
+      background: #90EE90;
+      color: #228B22;
+    }
+    .status.disconnected {
+      background: #FFB6C6;
+      color: #8B0000;
+    }
+    .card {
+      background: #fbf4e3;
+      border: 1px solid #cdb994;
+      border-left: 3px solid #9a6b1c;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      color: #9a6b1c;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #9a6b1c;
+      padding-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #cdb994;
+      border-radius: 5px;
+      font-family: inherit;
+    }
+    button {
+      background: #7d1a1a;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px 5px 10px 0;
+    }
+    button:hover { background: #5d1515; }
+    .log {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 12px;
+      font-family: monospace;
+      margin-top: 10px;
+    }
+    .log-entry {
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+      color: #333;
+    }
+    .log-entry.success { color: #228B22; }
+    .log-entry.error { color: #8B0000; }
+    .players-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .player-item {
+      background: #fff;
+      border: 1px solid #cdb994;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .player-item.online { border-left: 3px solid #228B22; }
+    .player-item.offline { border-left: 3px solid #8B0000; opacity: 0.6; }
+  </style>
+</head>
+<body>
+
+<h1>🕯️ Blood on the Clocktower - Database Integrato</h1>
+
+<div id="status" class="status disconnected">⏳ Connessione in corso...</div>
+
+<div class="card">
+  <h2>📊 Stato Database</h2>
+  <div id="db-status">Verifica in corso...</div>
+  <div class="log" id="connection-log"></div>
+</div>
+
+<div class="card">
+  <h2>👤 Registra Giocatore</h2>
+  <input type="text" id="username" placeholder="Nome utente">
+  <input type="text" id="character-name" placeholder="Nome personaggio">
+  <select id="character-class">
+    <option value="">Seleziona classe</option>
+    <option value="Townsfolk">Townsfolk</option>
+    <option value="Outsider">Outsider</option>
+    <option value="Minion">Minion</option>
+    <option value="Demone">Demone</option>
+  </select>
+  <button onclick="registerPlayer()">✅ Registra</button>
+  <div class="log" id="register-log"></div>
+</div>
+
+<div class="card">
+  <h2>🎮 Giocatori Online</h2>
+  <button onclick="loadPlayers()">🔄 Aggiorna Lista</button>
+  <div id="players-list" class="players-list"></div>
+</div>
+
+<div class="card">
+  <h2>💬 Log Azioni</h2>
+  <textarea id="action-description" placeholder="Descrizione azione" rows="3"></textarea>
+  <select id="action-type">
+    <option value="">Seleziona tipo azione</option>
+    <option value="login">Login</option>
+    <option value="join_lobby">Join Lobby</option>
+    <option value="start_game">Start Game</option>
+    <option value="attack">Attack</option>
+    <option value="spell">Spell</option>
+    <option value="message">Message</option>
+  </select>
+  <button onclick="logAction()">📝 Registra Azione</button>
+  <div class="log" id="action-log"></div>
+</div>
+
+<div class="card">
+  <h2>📈 Statistiche</h2>
+  <button onclick="loadStatistics()">📊 Carica Statistiche</button>
+  <div id="stats-container"></div>
+</div>
+
+<script>
+// Configurazione Supabase
+const SUPABASE_URL = 'https://icpbtgtgpmahspfbcksg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImljcGJ0Z3RncG1haHNwZmJja3NnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MzQ1NDUsImV4cCI6MjEwNzMxMDU0NX0.w83nqGigIoJsR-L5A04GW6d2lhiE4-Li6TMiuHJMLCw';
+
+let supabase = null;
+let currentUserId = null;
+
+// Inizializza Supabase
+async function initSupabase() {
+  const { createClient } = window.supabase;
+  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  
+  addLog('connection-log', 'Supabase inizializzato', 'success');
+  
+  // Verifica connessione
+  await checkDatabaseConnection();
+  
+  // Carica giocatori all'avvio
+  setTimeout(() => loadPlayers(), 1000);
+}
+
+async function checkDatabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+
+    updateStatus(true);
+    addLog('connection-log', '✅ Database connesso correttamente', 'success');
+    document.getElementById('db-status').innerHTML = '🟢 <b>Database Online</b><br>Tutte le tabelle sono pronte';
+  } catch (e) {
+    updateStatus(false);
+    addLog('connection-log', '❌ Errore: ' + e.message, 'error');
+    document.getElementById('db-status').innerHTML = '🔴 <b>Errore Connessione</b><br>' + e.message;
+  }
+}
+
+function updateStatus(connected) {
+  const statusEl = document.getElementById('status');
+  if (connected) {
+    statusEl.className = 'status connected';
+    statusEl.textContent = '🟢 CONNESSO - Database attivo';
+  } else {
+    statusEl.className = 'status disconnected';
+    statusEl.textContent = '🔴 DISCONNESSO - Errore database';
+  }
+}
+
+// Registra giocatore
+async function registerPlayer() {
+  const username = document.getElementById('username').value.trim();
+  const characterName = document.getElementById('character-name').value.trim();
+  const characterClass = document.getElementById('character-class').value;
+
+  if (!username || !characterName || !characterClass) {
+    addLog('register-log', '⚠️ Compila tutti i campi', 'error');
+    return;
+  }
+
+  try {
+    // Crea utente
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .insert({
+        username: username,
+        email: username + '@game.local',
+        display_name: username,
+        role: 'player'
+      })
+      .select()
+      .single();
+
+    if (userError && userError.code !== '23505') throw userError; // Ignora duplicati
+
+    const userId = userData?.id || username;
+    currentUserId = userId;
+
+    // Registra giocatore in lobby
+    const { data: playerData, error: playerError } = await supabase
+      .from('game_players')
+      .insert({
+        campaign_id: 'default-campaign',
+        user_id: userId,
+        character_name: characterName,
+        character_class: characterClass,
+        status: 'joined',
+        is_online: true,
+        joined_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (playerError) throw playerError;
+
+    // Log accesso
+    await supabase
+      .from('access_logs')
+      .insert({
+        user_id: userId,
+        action: 'player_registered',
+        campaign_id: 'default-campaign',
+        metadata: { character: characterName, class: characterClass },
+        timestamp: new Date().toISOString()
+      });
+
+    addLog('register-log', `✅ ${username} registrato come ${characterName} (${characterClass})`, 'success');
+    
+    document.getElementById('username').value = '';
+    document.getElementById('character-name').value = '';
+    document.getElementById('character-class').value = '';
+    
+    loadPlayers();
+  } catch (e) {
+    addLog('register-log', '❌ Errore: ' + e.message, 'error');
+  }
+}
+
+// Carica lista giocatori
+async function loadPlayers() {
+  try {
+    const { data, error } = await supabase
+      .from('game_players')
+      .select('*, users:user_id(username, display_name)')
+      .eq('campaign_id', 'default-campaign')
+      .neq('status', 'left')
+      .order('joined_at', { ascending: false });
+
+    if (error) throw error;
+
+    const container = document.getElementById('players-list');
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div style="text-align: center; color: #999;">Nessun giocatore online</div>';
+      return;
+    }
+
+    container.innerHTML = data.map(player => `
+      <div class="player-item ${player.is_online ? 'online' : 'offline'}">
+        <div>
+          <strong>${player.character_name}</strong><br>
+          <small>${player.character_class} • ${player.is_online ? '🟢 Online' : '⚫ Offline'}</small>
+        </div>
+        <div>
+          <small>${player.status}</small>
+        </div>
+      </div>
+    `).join('');
+
+    addLog('connection-log', `✅ ${data.length} giocatore(i) caricato(i)`, 'success');
+  } catch (e) {
+    addLog('connection-log', '❌ Errore caricamento: ' + e.message, 'error');
+  }
+}
+
+// Registra azione di gioco
+async function logAction() {
+  const actionType = document.getElementById('action-type').value;
+  const description = document.getElementById('action-description').value.trim();
+
+  if (!actionType || !description) {
+    addLog('action-log', '⚠️ Compila tutti i campi', 'error');
+    return;
+  }
+
+  try {
+    const { error } = await supabase
+      .from('game_actions')
+      .insert({
+        campaign_id: 'default-campaign',
+        user_id: currentUserId || 'guest',
+        action_type: actionType,
+        action_description: description,
+        timestamp: new Date().toISOString()
+      });
+
+    if (error) throw error;
+
+    // Registra anche nel log accessi
+    await supabase
+      .from('access_logs')
+      .insert({
+        user_id: currentUserId || null,
+        action: actionType,
+        campaign_id: 'default-campaign',
+        details: description,
+        timestamp: new Date().toISOString()
+      });
+
+    addLog('action-log', `✅ Azione registrata: ${actionType}`, 'success');
+    document.getElementById('action-description').value = '';
+    document.getElementById('action-type').value = '';
+  } catch (e) {
+    addLog('action-log', '❌ Errore: ' + e.message, 'error');
+  }
+}
+
+// Carica statistiche
+async function loadStatistics() {
+  try {
+    const { data, error } = await supabase
+      .from('access_logs')
+      .select('*')
+      .eq('campaign_id', 'default-campaign')
+      .order('timestamp', { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    const totalActions = data.length;
+    const uniqueUsers = new Set(data.map(d => d.user_id)).size;
+    const actionTypes = {};
+
+    data.forEach(log => {
+      actionTypes[log.action] = (actionTypes[log.action] || 0) + 1;
+    });
+
+    const statsHTML = `
+      <div style="margin-top: 10px;">
+        <p><strong>📊 Statistiche Campagna:</strong></p>
+        <ul style="list-style: none; padding: 0;">
+          <li>🔢 Totale azioni: <strong>${totalActions}</strong></li>
+          <li>👥 Utenti unici: <strong>${uniqueUsers}</strong></li>
+          <li>🎮 Tipi azioni: <strong>${Object.keys(actionTypes).length}</strong></li>
+        </ul>
+        <p style="margin-top: 15px;"><strong>📈 Dettaglio azioni:</strong></p>
+        <ul style="list-style: none; padding: 0;">
+          ${Object.entries(actionTypes).map(([action, count]) => 
+            `<li>• ${action}: <strong>${count}</strong></li>`
+          ).join('')}
+        </ul>
+        <p style="margin-top: 15px; font-size: 12px; color: #999;">Ultimo aggiornamento: ${new Date().toLocaleTimeString()}</p>
+      </div>
+    `;
+
+    document.getElementById('stats-container').innerHTML = statsHTML;
+    addLog('connection-log', '✅ Statistiche caricate', 'success');
+  } catch (e) {
+    addLog('connection-log', '❌ Errore statistiche: ' + e.message, 'error');
+  }
+}
+
+// Utility: aggiungi log
+function addLog(elementId, message, type = 'info') {
+  const logEl = document.getElementById(elementId);
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+  logEl.appendChild(entry);
+  logEl.scrollTop = logEl.scrollHeight;
+  
+  // Mantieni solo gli ultimi 50 entry
+  while (logEl.children.length > 50) {
+    logEl.removeChild(logEl.firstChild);
+  }
+}
+
+// Inizializza al caricamento
+window.addEventListener('load', () => {
+  setTimeout(initSupabase, 500);
+});
+
+// Auto-refresh giocatori ogni 5 secondi
+setInterval(loadPlayers, 5000);
+</script>
+
+</body>
+</html>
