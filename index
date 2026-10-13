@@ -1,0 +1,509 @@
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#7d1a1a"><meta name="format-detection" content="telephone=no"><title>Blood on the Clocktower</title>
+<style>
+:root{--glow:#fff6dcaa;--bg:#efe6d2;--fg:#2b1d14;--cd:#fbf4e3;--ac:#7d1a1a;--mu:#6e5f50;--bd:#cdb994;--gd:#1d5a96;--ev:#a31515;--gold:#9a6b1c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--glow:#3a181288;--bg:#120d0b;--fg:#eadfcb;--cd:#1f1714;--ac:#b8322c;--mu:#a1927f;--bd:#43372d;--gd:#6aaef0;--ev:#ff7070;--gold:#d4a84b}}
+:root[data-theme="dark"]{--glow:#3a181288;--bg:#120d0b;--fg:#eadfcb;--cd:#1f1714;--ac:#b8322c;--mu:#a1927f;--bd:#43372d;--gd:#6aaef0;--ev:#ff7070;--gold:#d4a84b}
+html{scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0 auto;background:var(--bg) radial-gradient(ellipse at 50% 0,var(--glow),transparent 65%) fixed;color:var(--fg);font:16px/1.5 Georgia,"Times New Roman",serif;padding:8px 10px 96px;max-width:640px}
+*{-webkit-tap-highlight-color:transparent}
+h2{text-shadow:0 1px 0 #0003;font-size:24px;margin:6px 0;text-align:center;color:var(--gold);letter-spacing:.06em;font-variant:small-caps;border-bottom:1px solid var(--gold);padding-bottom:4px}
+.card{background:var(--cd);border:1px solid var(--bd);border-left:3px solid var(--gold);border-radius:10px;padding:12px;margin:10px 0;box-shadow:0 1px 6px #0003}
+button,select,input,textarea{font:inherit;font-size:16px;color:var(--fg);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin:3px;max-width:100%;min-height:40px}
+button{cursor:pointer;touch-action:manipulation}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+textarea{width:100%;box-sizing:border-box}
+#top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);display:flex;flex-wrap:wrap;gap:2px;padding:4px 0}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;background:var(--cd);border-top:1px solid var(--gold);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
+.tabs:empty{display:none}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;border:0;border-top:2px solid transparent;background:none;border-radius:0;margin:0;padding:2px;min-height:50px;color:var(--mu)}
+.tabs button.on{color:var(--gold);border-top-color:var(--gold);background:none}.tabs span{font-size:20px}.tabs small{font-size:11px}
+.mu{color:var(--mu);font-size:14px}.g{color:var(--gd);font-weight:bold}.e{color:var(--ev);font-weight:bold}.warn{color:var(--ev);font-weight:bold}
+.bn{background:var(--ac);color:#fff;padding:12px;border-radius:10px;margin:8px 0;font-weight:bold;text-align:center}
+.dead{opacity:.5}.c{text-align:center}.big{font-size:26px;font-weight:bold;color:var(--gold)}
+.ov{position:fixed;inset:0;background:#000e;display:flex;align-items:center;justify-content:center;z-index:9;padding:20px;text-align:center;color:#fff}
+.row{display:flex;flex-wrap:wrap;align-items:center}label{display:inline-block;margin:4px 10px 4px 0}
+.tk{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--gd);background:var(--bg);font-size:19px;vertical-align:middle;margin-right:6px;flex:none;box-shadow:0 0 6px #1d5a9655}
+.tk.M,.tk.D{border-color:var(--ev);box-shadow:0 0 6px #a3151588}
+.tk.lg{width:96px;height:96px;font-size:52px;margin:8px auto;display:flex;border-width:3px}
+.tk.back{border-color:var(--gold);color:var(--gold);box-shadow:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.seat{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--bd);border-radius:20px;padding:4px 12px;margin:3px;background:var(--bg)}
+.seat.me{border-color:var(--gold);font-weight:bold}.seat.x{opacity:.5;text-decoration:line-through}
+.qr{background:#fff;display:inline-block;padding:10px;border-radius:8px;margin:8px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:270px;margin:12px auto}.pad button{min-height:62px;font-size:26px}.dots{font-size:34px;letter-spacing:10px;color:var(--gold);min-height:46px}.bigb{width:86%;min-height:64px;font-size:20px;margin:8px 0}
+.orn{text-align:center;color:var(--gold);letter-spacing:.6em;margin:2px 0 6px}
+.hint{background:var(--cd);border:1px dashed var(--gold);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px}
+.toast{position:fixed;left:10px;right:10px;bottom:calc(78px + env(safe-area-inset-bottom,0px));background:var(--ac);color:#fff;padding:12px 14px;border-radius:10px;z-index:20;display:none;box-shadow:0 4px 14px #0008;font-size:15px}
+.card.good{border-left-color:var(--gd)}.card.evil{border-left-color:var(--ev)}
+.prog{height:6px;background:var(--bd);border-radius:3px;margin-top:6px}.prog i{display:block;height:100%;background:var(--gold);border-radius:3px}
+.sub{color:var(--mu);font-style:italic;text-align:center;margin:0 0 6px}
+details summary{cursor:pointer;min-height:32px}
+</style> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head><body>
+<h2 style="margin:4px 0">🕯️ Blood on the Clocktower</h2>
+
+<div id="top"></div><div id="bn"></div><div id="main"></div><div id="ov"></div><div id="toast" class="toast" onclick="this.style.display='none'"></div><nav class="tabs" id="tabs"></nav>
+<script>
+const R={
+Washerwoman:['T','Sai che 1 di 2 giocatori è un certo Townsfolk.','Mostra 2 giocatori + token Townsfolk: uno è giusto, l’altro sbagliato. La Spy può risultare Townsfolk. Se avvelenato/ubriaco puoi dare info false.'],
+Librarian:['T','Sai che 1 di 2 giocatori è un certo Outsider (o 0).','Mostra 2 giocatori + token Outsider. Se non ci sono Outsider mostra 0. Il Drunk è un Outsider (non rivelare il Townsfolk che crede di essere).'],
+Investigator:['T','Sai che 1 di 2 giocatori è un certo Minion.','Mostra 2 giocatori + token Minion. La Recluse può risultare Minion.'],
+Chef:['T','Sai quante coppie di malvagi sono sedute vicine.','Mostra le dita (0,1,2…). Contano anche i morti per la seduta. La Recluse può contare come malvagia o no.'],
+Empath:['T','Ogni notte: quanti dei 2 vicini VIVI sono malvagi.','Dopo il Demone: l’info è quella dell’alba. Ignora i morti (prende il vivo più vicino). Spy/Recluse possono variare.'],
+FortuneTeller:['T','Ogni notte scegli 2 giocatori: sì se uno è Demone.','Annuisci se uno dei due è Imp o il RED HERRING (buono fisso per tutta la partita). Può scegliere morti o se stesso.'],
+Undertaker:['T','Ogni notte (non la 1ª) impari chi è stato giustiziato oggi.','Svegliare solo se oggi c’è stata un’esecuzione. Se era il Drunk mostra Drunk. La Spy può registrarsi come altro.'],
+Monk:['T','Ogni notte (non la 1ª) proteggi un giocatore (non te) dal Demone.','Se il Demone attacca il protetto: nessun morto, non dire perché. Non protegge dalle esecuzioni.'],
+Ravenkeeper:['T','Se muori di notte scegli un giocatore: vedi il suo personaggio.','Svegliare SOLO se è morto stanotte (anche tramite Mayor). Può scegliere un morto.'],
+Virgin:['T','1ª volta nominata: se il nominatore è Townsfolk viene giustiziato.','Solo Townsfolk (non Outsider/Minion/Demone). Dopo la 1ª nomination perde l’abilità anche se avvelenata. Fine nomination del giorno.'],
+Slayer:['T','1 volta/partita, di giorno: scegli pubblicamente, se è il Demone muore.','Se avvelenato/ubriaco non funziona e perde comunque l’uso. La Recluse può morire se registrata come Imp. Non rivelare chi è morto.'],
+Soldier:['T','Sei al sicuro dal Demone.','Il Demone che lo attacca non uccide nessuno. Muore comunque per esecuzione o se avvelenato.'],
+Mayor:['T','3 vivi e nessuna esecuzione: vince il bene. Se muori di notte, può morire un altro.','Se attaccato puoi scegliere un altro morto (non Soldier/protetto: allora nessun morto). Alba: annuncia solo chi è morto.'],
+Butler:['O','Ogni notte scegli un Master: domani voti solo se lui vota.','Segna il Master. Non sei tu a controllare i voti del Butler.'],
+Drunk:['O','Pensi di essere un Townsfolk ma sei il Drunk.','Nessuna abilità. Svegliarlo come il Townsfolk che crede di essere e dare info false.'],
+Recluse:['O','Puoi risultare malvagio e Minion/Demone, anche da morto.','Decidi tu come si registra ogni volta, scegliendo l’opzione più interessante.'],
+Saint:['O','Se muori per esecuzione, il tuo team perde.','Esecuzione = vince il male (solo se sano). Se muore di notte il gioco continua.'],
+Poisoner:['M','Ogni notte avveleni un giocatore (notte + giorno dopo).','Il giocatore avvelenato agisce normalmente ma senza effetto; puoi dargli info false.'],
+Spy:['M','Vedi il Grimoire. Puoi registrarti come buono e Townsfolk/Outsider.','Mostrare il Grimoire tutto il tempo che serve (orientato bene).'],
+ScarletWoman:['M','Con ≥5 vivi, se muore il Demone diventi il Demone.','Travellers non contano. Se il Demone muore con ≥5 vivi → diventa Imp, svegliala e mostra YOU ARE + token Imp.'],
+Baron:['M','Ci sono 2 Outsider in più. [+2 Outsiders]','Setup: -2 Townsfolk, +2 Outsider. Non si annulla se muore.'],
+Imp:['D','Ogni notte (non la 1ª) scegli chi muore. Se ti uccidi, un Minion diventa Imp.','Se si uccide: scegli un Minion vivo (la Scarlet Woman deve diventarlo se ≥5 vivi), svegliarlo e mostrare YOU ARE + Imp.']};
+const TN={T:'Townsfolk',O:'Outsider',M:'Minion',D:'Demone'};
+const ORD1=['dusk','minfo','dinfo','Poisoner','Spy','Washerwoman','Librarian','Investigator','Chef','Empath','FortuneTeller','Butler','dawn'];
+const ORD2=['dusk','Poisoner','Monk','Spy','ScarletWoman','Imp','Ravenkeeper','Empath','FortuneTeller','Undertaker','Butler','dawn'];
+const CNT={5:[3,0,1],6:[3,1,1],7:[5,0,1],8:[5,1,1],9:[5,2,1],10:[7,0,2],11:[7,1,2],12:[7,2,2],13:[9,0,3],14:[9,1,3],15:[9,2,3]};
+const ty=r=>R[r][0], $=s=>document.querySelector(s), esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let DB=null,UID=null,LOB={},ACTS={},VOTES={},ISADM=false;
+let FORM={},OPENS=new Set(),PENDING=0,FLUSH=()=>{};
+const busy=()=>{const a=document.activeElement;return !!a&&(a.tagName==='TEXTAREA'||a.tagName==='SELECT'||(a.tagName==='INPUT'&&!['checkbox','radio','button','submit'].includes(a.type)))};
+function restoreUI(sy){try{Object.keys(FORM).forEach(id=>{const e=document.getElementById(id);if(!e||e.tagName==='BUTTON')return;if(e.tagName==='SELECT'){if([...e.options].some(o=>o.value===FORM[id]))e.value=FORM[id]}else if(e.value!==FORM[id])e.value=FORM[id]});document.querySelectorAll('details').forEach(d=>{const k=(d.querySelector('summary')||{}).textContent;if(OPENS.has(k))d.open=true});if(sy)window.scrollTo(0,sy)}catch(e){}}
+if(document.addEventListener){document.addEventListener('input',e=>{const t=e.target;if(t&&t.id&&t.id!=='nmx'&&t.tagName!=='BUTTON'&&t.type!=='checkbox')FORM[t.id]=t.value},true);document.addEventListener('change',e=>{const t=e.target;if(t&&t.id&&t.id!=='nmx'&&t.type!=='checkbox')FORM[t.id]=t.value;if(t&&t.tagName==='SELECT')setTimeout(()=>t.blur(),0)},true);document.addEventListener('focusout',()=>setTimeout(()=>{if(PENDING&&!busy()){PENDING=0;FLUSH()}},60),true);document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.tagName==='DETAILS'){const k=(d.querySelector('summary')||{}).textContent;if(d.open)OPENS.add(k);else OPENS.delete(k)}},true)}
+let H=[],STAND=true,NETST='',PID='';const ONL=new Set();
+let S;try{S=JSON.parse(localStorage.getItem('botc'))}catch(e){}
+S=Object.assign({p:[],night:0,phase:'setup',noms:[],done:{},tab:'setup',sel:[],names:'',nd:[],monk:-1,bl:[],last:'',ex:0,saint:0,log:[],excl:{}},S||{});
+const save=()=>{try{localStorage.setItem('botc',JSON.stringify(S))}catch(e){}};
+const healthy=p=>!p.pois&&p.role!=='Drunk', evil=p=>['M','D'].includes(ty(p.role)), alive=()=>S.p.filter(p=>p.al).length;
+const inRole=r=>S.p.map((p,i)=>({p,i})).filter(x=>x.p.role===r||(x.p.role==='Drunk'&&x.p.fake===r));
+function nb(i){const n=S.p.length,o=[];for(const d of[-1,1]){let j=i;for(let k=0;k<n;k++){j=(j+d+n)%n;if(j!==i&&S.p[j].al){o.push(j);break}}}return o}
+function rc(){H.push(JSON.stringify(S));if(H.length>40)H.shift();renderNow();save();sync()}
+function setTab(t){S.tab=t;rc()}
+function tg(r){const k=S.sel.indexOf(r);k<0?S.sel.push(r):S.sel.splice(k,1);rc()}
+function assign(){
+ const nm=S.names.split('\n').map(s=>s.trim()).filter(Boolean),sel=S.sel;
+ if(nm.length<5||nm.length>15||sel.length!==nm.length){toast('Servono 5–15 giocatori e tanti ruoli selezionati quanti sono i giocatori.');return}
+ const cc=CNT[nm.length],bar=sel.includes('Baron'),need=[cc[0]-(bar?2:0),cc[1]+(bar?2:0),cc[2],1],got=['T','O','M','D'].map(t=>sel.filter(r=>ty(r)===t).length);
+ if(need.some((x,k)=>x!==got[k])){toast('Composizione non valida per '+nm.length+' giocatori'+(bar?' (con il Baron)':'')+': servono '+need[0]+' Townsfolk, '+need[1]+' Outsider, '+need[2]+' Minion e 1 Demone. Hai '+got[0]+'/'+got[1]+'/'+got[2]+'/'+got[3]+'.');return}
+ const miss=nm.filter(n=>!(S.uidmap&&S.uidmap[n]&&ONL.has(S.uidmap[n])));
+ if(DB&&miss.length&&!confirm('Questi giocatori non risultano collegati: '+miss.join(', ')+'. Non riceveranno il ruolo sul telefono. Assegnare comunque?'))return;
+ if(S.p.length&&!confirm('Ricominciare una nuova partita?'))return;
+ const rs=shuf([...sel]),fk=shuf(Object.keys(R).filter(r=>ty(r)==='T'&&!sel.includes(r)));
+ S.p=nm.map((n,i)=>({n,role:rs[i],al:1,vu:0,pois:0,rh:0,vg:0,note:'',fake:rs[i]==='Drunk'?fk[0]:'',uid:(S.uidmap||{})[n]||''}));
+ const f=S.p.some(p=>p.role==='Drunk')?1:0;
+ S.bl=[...fk.slice(f,f+2),...shuf(Object.keys(R).filter(r=>ty(r)==='O'&&!sel.includes(r))).slice(0,1)];
+ if(sel.includes('FortuneTeller')){const g=shuf(S.p.filter(p=>!evil(p)));if(g.length)g[0].rh=1}
+ Object.assign(S,{night:0,phase:'setup',noms:[],done:{},tab:'grim',nd:[],monk:-1,last:'',ex:0,saint:0,rx:{},assignAt:Date.now(),teamSent:0,msgs:{},ask:{},slu:{},mayorWin:0});rc()}
+function rev(i){const p=S.p[i],r=p.fake||p.role;$('#ov').innerHTML=`<div class="ov" onclick="this.remove()"><div><div style="font-size:15px">${esc(p.n)}, sei:</div>${tk(r,'lg')}<h1>${nm(r)}</h1><p>${R[r][1]}</p><div class="mu">Tocca per nascondere</div></div></div>`}
+function startNight(){if(S.phase==='night')return;if(S.phase==='day'&&alive()===3&&inRole('Mayor').some(x=>x.p.al&&healthy(x.p))&&!S.ex){S.mayorWin=1;rc();return}FORM={};S.night++;S.cur=null;S.tEnd=0;S.phase='night';S.p.forEach(p=>p.pois=0);S.monk=-1;S.nd=[];if(S.night===1&&S.p.length>=7&&!S.teamSent){S.teamSent=1;sendTeam()}rc();window.scrollTo(0,0)}
+function startDay(){if(S.phase!=='night')return;FORM={};S.phase='day';S.noms=[];S.ex=0;rc();window.scrollTo(0,0)}
+function kill(i,how){const p=S.p[i];p.al=0;if(how==='night')S.nd.push(i);rc()}
+function setPois(i){S.p.forEach(p=>p.pois=0);if(i>=0)S.p[i].pois=1;rc()}
+function monkOk(){return inRole('Monk').some(x=>x.p.al&&healthy(x.p))}
+function impKill(){const i=+$('#it').value;if(!(i>=0)||!S.p[i])return;const t=S.p[i];
+ if(S.p.some(p=>p.role==='Imp'&&p.al&&p.pois)){toast('L’Imp è avvelenato: la sua uccisione non ha effetto. Nessun morto stanotte.');return}
+ if(!t.al){toast('Era già morto: non succede nulla (lascia che il giocatore lo scelga lo stesso).');return}
+ if(t.role==='Soldier'&&healthy(t)){toast('Soldier sano: nessun morto stanotte.');return}
+ if(S.monk===i&&monkOk()){toast('Protetto dal Monk: nessun morto.');return}
+ if(t.role==='Mayor'&&healthy(t)&&confirm('Il Mayor è attaccato. OK = scegli un altro che muore al posto suo (poi “Morto” sul Grimorio; se scegli Soldier/protetto/morto nessun morto). Annulla = muore il Mayor.')){return}
+ if(t.role==='Imp'){toast('L’Imp si uccide: scegli un Minion vivo e cambia il suo ruolo in Imp dal Grimorio (la Scarlet Woman DEVE diventarlo se ≥5 vivi). Svegliarlo dopo e mostrare YOU ARE + Imp.')}
+ kill(i,'night')}
+function addNom(by,to,v){if(by===undefined){by=+$('#nb').value;to=+$('#nt').value;v=+$('#nv').value||0}if(by<0||to<0)return;
+ delete FORM.nb;delete FORM.nt;delete FORM.nv;S.noms.push({by,to,v});const t=S.p[to],b=S.p[by];
+ if(t.role==='Virgin'&&!t.vg){t.vg=1;
+  const spyV=b.role==='Spy'&&confirm('La Spy nomina la Vergine: registrarla come Townsfolk ed eseguirla?');if((ty(b.role)==='T'||spyV)&&healthy(t)&&!S.ex){toast('VERGINE! '+b.n+' è Townsfolk: viene giustiziato subito. Fine delle nomination di oggi. (Se è la Spy, decidi tu come si registra.)');exec(by);return}
+  toast('Vergine nominata: perde l’abilità. Il nominatore ('+b.role+') '+(healthy(t)?'non è Townsfolk: nessun effetto, si vota normalmente.':'—Vergine avvelenata/ubriaca: nessun effetto.'))}
+ rc()}
+function exec(i){if(S.ex){toast('Una sola esecuzione al giorno.');return}const p=S.p[i];S.ex=1;S.last=p.role;p.al=0;
+ if(p.role==='Saint'&&healthy(p))S.saint=1;rc()}
+function win(){if(!S.p.length)return'';if(S.mayorWin)return'🎉 Restano 3 giocatori, nessuna esecuzione e il Mayor è vivo e sano: VINCE IL BENE (Mayor)';const a=alive(),imp=S.p.some(p=>p.al&&p.role==='Imp');
+ if(S.saint)return'⚖️ Il Saint è stato giustiziato: VINCE IL MALE';
+ if(!imp){const sw=S.p.some(p=>p.al&&p.role==='ScarletWoman'&&healthy(p));
+  return sw&&a>=4?'⚠️ L’Imp è morto ma la Scarlet Woman (≥5 vivi prima) diventa Imp: cambia il suo ruolo. Il gioco continua.':'🎉 L’Imp è morto: VINCE IL BENE'}
+ if(a<=2)return'💀 Restano 2 vivi: VINCE IL MALE';
+ if(a===3&&S.phase==='day'&&inRole('Mayor').some(x=>x.p.al&&healthy(x.p)))return'🏛️ 3 vivi e c’è il Mayor: se oggi nessuno viene giustiziato, VINCE IL BENE';return''}
+const opts=(f,sel)=>S.p.map((p,i)=>f(p,i)?`<option value="${i}"${sel===i?' selected':''}>${esc(p.n)}</option>`:'').join('');
+function vSetup(){
+ const n=S.names.split('\n').map(s=>s.trim()).filter(Boolean).length,c=CNT[n],need=c?[...c]:[0,0,0];
+ if(S.sel.includes('Baron')){need[0]-=2;need[1]+=2}
+ const cnt=t=>S.sel.filter(r=>ty(r)===t).length;
+ let h=`<div class="card"><b>1. Giocatori</b> (uno per riga, in ordine di seduta orario)<textarea id="nmx" rows="6" oninput="S.names=this.value" onchange="S.names=this.value;rc()">${esc(S.names)}</textarea><div class="mu">${n} giocatori ${c?'':'(servono 5–15)'}</div></div><div class="card"><b>2. Ruoli</b> ${c?`<div class="mu">Servono: ${need[0]} Townsfolk · ${need[1]} Outsider · ${need[2]} Minion · 1 Demone (Baron: −2 Townsfolk, +2 Outsider)</div>`:''}`;
+ ['T','O','M','D'].forEach((t,k)=>{h+=`<div><b>${TN[t]}</b> ${cnt(t)}/${k<3?need[k]:1}<br>`+Object.keys(R).filter(r=>ty(r)===t).map(r=>`<label><input type="checkbox" ${S.sel.includes(r)?'checked':''} onchange="tg('${r}')">${IC[r]} ${nm(r)}</label>`).join('')+'</div>'});
+ h+=`<button onclick="autoSel()">✨ Suggerisci ruoli</button><button class="on" onclick="assign()">🎲 Assegna a caso e crea Grimorio</button></div>`;
+ if(S.p.length)h+=`<div class="card"><b>3. Distribuzione segreta</b><div class="mu">Passa il telefono: ogni giocatore tocca il proprio nome e legge il suo ruolo (il Drunk vede il Townsfolk finto).</div>`+S.p.map((p,i)=>`<button onclick="rev(${i})">👁 ${esc(p.n)}</button>`).join('')+`<div class="mu" style="margin-top:6px">Bluff per il Demone (non in gioco): <b>${S.bl.join(', ')}</b></div></div>`;
+ return h}
+function vGrim(){if(!S.p.length)return'<div class="card">Crea prima la partita in “Setup”.</div>';
+ return bluffCard()+gridTools()+(S.circ?vCircle():'')+notesCard()+S.p.map((p,i)=>{const t=ty(p.role);return`<div class="card ${evil(p)?'evil':'good'} ${p.al?'':'dead'}"><div class="row">${tk(p.role)}<b>${i+1}. ${esc(p.n)}</b> ${p.uid?(ONL.has(p.uid)?'🟢':'⚪')+(S.rx&&S.rx[p.uid]?'📥':'⏳'):''}&nbsp;<span class="${evil(p)?'e':'g'}">${TN[t]}</span><select onchange="S.p[${i}].role=this.value;rc()">${Object.keys(R).map(r=>`<option${r===p.role?' selected':''}>${r}</option>`).join('')}</select>${p.role==='Drunk'?`pensa:<select onchange="S.p[${i}].fake=this.value;rc()">${Object.keys(R).filter(r=>ty(r)==='T').map(r=>`<option${r===p.fake?' selected':''}>${r}</option>`).join('')}</select>`:''}</div>
+<div class="row"><button class="${p.al?'':'on'}" onclick="tgAl(${i})">${p.al?'Vivo':'Morto'}</button><button class="${p.vu?'on':''}" onclick="S.p[${i}].vu=${p.vu?0:1};rc()">${p.vu?'Voto usato':'Voto ok'}</button><button class="${p.pois?'on':''}" onclick="S.p[${i}].pois=${p.pois?0:1};rc()">☠ Avvelenato</button><button class="${p.rh?'on':''}" onclick="S.p[${i}].rh=${p.rh?0:1};rc()">Red Herring</button>${p.uid?`<button onclick="msgTo(${i})">📨</button>`:''}</div>
+<input style="width:94%" placeholder="Note / reminder" value="${esc(p.note)}" onchange="S.p[${i}].note=this.value;save()"></div>`}).join('')}
+function stat(p){return(p.role==='Drunk'?'<span class="warn"> DRUNK: dai info false</span>':'')+(p.pois?'<span class="warn"> AVVELENATO: info false</span>':'')}
+function step(id){const k=S.night+id,d=S.done[k],n=S.p.length;
+ const ck=`<label><input type="checkbox" ${d?'checked':''} onchange="S.done['${k}']=this.checked;save()"> fatto</label>`;
+ const wrap=(t,b)=>`<div class="card ${R[id]?(['M','D'].includes(ty(id))?'evil':'good'):''}" style="${d?'opacity:.55':''}"><div class="row"><b>${t}</b>&nbsp;${ck}</div>${b}</div>`;
+ if(id==='dusk')return wrap('🌆 Dusk','<div class="mu">“Tutti chiudono gli occhi.” L’avvelenamento della notte scorsa è già terminato.</div>');
+ if(id==='minfo'||id==='dinfo'){if(n<7)return'';const m=S.p.filter(p=>ty(p.role)==='M').map(p=>p.n).join(', '),dm=S.p.filter(p=>p.role==='Imp').map(p=>p.n).join(', ');
+  return id==='minfo'?wrap('😈 Minion info','<div>Sveglia i Minion insieme, mostra THIS IS THE DEMON e indica <b>'+esc(dm)+'</b>.</div>'):wrap('👿 Demon info','<div>Sveglia l’Imp, mostra THESE ARE YOUR MINIONS e indica <b>'+esc(m)+'</b>. Poi THESE CHARACTERS ARE NOT IN PLAY con i bluff: <b>'+S.bl.join(', ')+'</b>.</div><button onclick="sendTeam()">📨 Invia team e bluff ai malvagi (app)</button>')}
+ if(id==='dawn'){return wrap('🌅 Alba','<div>Aspetta 5–10 secondi, “occhi aperti”. Annuncia i morti senza dire come: <b>'+(S.nd.length?S.nd.map(i=>esc(S.p[i].n)).join(', '):'nessuno')+'</b>.</div>')}
+ const ps=inRole(id);if(!ps.length)return'';if(S.hd&&ps.every(x=>!x.p.al)&&id!=='Ravenkeeper')return'';
+ const names=ps.map(x=>esc(x.p.n)+(x.p.al?'':' (morto)')+stat(x.p)).join('<br>');
+ let ex='';const x0=ps[0];
+ if(id==='Poisoner'&&x0.p.al)ex=`<select onchange="setPois(+this.value)"><option value="-1">Scegli chi avveleni…</option>${opts(()=>1,S.p.findIndex(p=>p.pois))}</select>`;
+ if(id==='Monk'&&S.night>1)ex=`<select onchange="S.monk=+this.value;save()"><option value="-1">Protetto…</option>${opts((p,i)=>i!==x0.i,S.monk)}</select>`;
+ if(id==='Imp')ex=`<select id="it"><option value="-1">Bersaglio…</option>${opts(()=>1,-2)}</select><button onclick="impKill()">Uccidi</button>`;
+ if(id==='Undertaker')ex=`<div>Mostra: <b>${S.ex?esc(S.last):'—'}</b> ${S.ex?'':'<span class="mu">(nessuna esecuzione oggi → non svegliarlo)'+'</span>'}</div>`;
+ if(id==='FortuneTeller'){const rh=S.p.find(p=>p.rh);ex=`<div class="mu">Red Herring: <b>${rh?esc(rh.n):'non assegnato'}</b> · Demone: <b>${S.p.filter(p=>p.role==='Imp').map(p=>esc(p.n)).join(', ')}</b></div>`}
+ if(id==='Empath'){const i=x0.i,v=nb(i).filter(j=>evil(S.p[j])).length;ex=`<div>Valore “reale”: <b>${v}</b> <span class="mu">(Spy/Recluse possono variare; se avvelenato/ubriaco dai un altro numero)</span></div>`}
+ if(id==='Chef'){let c=0;for(let i=0;i<n;i++)if(evil(S.p[i])&&evil(S.p[(i+1)%n]))c++;ex=`<div>Coppie malvage reali: <b>${c}</b> <span class="mu">(Recluse ambigua)</span></div>`}
+ if(['Washerwoman','Librarian','Investigator'].includes(id)){const tt={Washerwoman:'T',Librarian:'O',Investigator:'M'}[id],ca=S.p.filter(p=>ty(p.role)===tt&&p!==x0.p).map(p=>esc(p.n)+' ('+p.role+')').join(', ');ex=`<div class="mu">Candidati veri: ${ca||'nessuno'}${id==='Librarian'&&!ca?' → mostra 0':''}</div>`}
+ if(id==='ScarletWoman')ex='<div class="mu">Se oggi/stanotte è morto il Demone con ≥5 vivi, trasformala in Imp dal Grimorio.</div>';
+ if(id==='Ravenkeeper')ex=ps.some(x=>S.nd.includes(x.i))?'<div class="warn">⚠️ È MORTO STANOTTE: svegliarlo ORA.</div>':'<div class="mu">Non è morto stanotte: salta.</div>';
+ ex+=extras(id,x0);return wrap(tk(id)+nm(id)+' <span class="mu">('+TN[ty(id)]+')</span>',`<div>${names}</div><div class="mu">${R[id][1]}</div><div class="mu">💡 ${R[id][2]}</div>${TIPS[id]?'<div class="mu">🎓 '+TIPS[id]+'</div>':''}${ex}${pl(ps,id)}`)}
+function vNight(){if(S.phase!=='night')return'<div class="card">Premi “🌙 Inizia notte” in alto.</div>';return actCard(5)+`<div class="card"><b>Notte ${S.night}</b> ${S.night===1?'(prima notte)':''} <label><input type="checkbox" ${S.hd?'checked':''} onchange="S.hd=this.checked;rc()">nascondi morti</label></div>`+(S.night===1?ORD1:ORD2).map(step).join('')}
+function vDay(){if(S.phase!=='day')return'<div class="card">Premi “☀️ Inizia giorno” in alto.</div>';
+ const a=alive(),th=Math.ceil(a/2),mx=Math.max(0,...S.noms.map(x=>x.v)),top=S.noms.filter(x=>x.v===mx);
+ const ok=mx>=th&&top.length===1;
+ const used=S.noms.map(x=>x.by),got=S.noms.map(x=>x.to);
+ return timerCard()+actCard(5)+`<div class="card"><b>Giorno</b> · vivi ${a} · soglia voti: <b>${th}</b></div><div class="card"><b>Nuova nomination</b><br>Nominatore <select id="nb"><option value="-1">—</option>${opts((p,i)=>p.al&&!used.includes(i),-2)}</select> Nominato <select id="nt"><option value="-1">—</option>${opts((p,i)=>!got.includes(i),-2)}</select> Voti <input id="nv" type="number" min="0" style="width:60px"><button class="on" onclick="addNom()">Aggiungi</button>${DB&&ISADM?'<button onclick="openVote()">📱 Apri voto app</button>':''}<div class="mu">Conta i voti in senso orario; i morti votano una sola volta (spunta “Voto usato” nel Grimorio).</div></div>`+
+ voteCard()+S.noms.map(x=>`<div class="card">${esc(S.p[x.by].n)} → <b>${esc(S.p[x.to].n)}</b>: ${x.v} voti</div>`).join('')+
+ (S.ex?'<div class="card">Esecuzione già avvenuta oggi.</div>':ok?`<div class="card"><b>In bilico: ${esc(S.p[top[0].to].n)}</b> (${mx}) <button class="on" onclick="exec(${top[0].to})">Esegui</button></div>`:S.noms.length?'<div class="card mu">Nessuno è “about to die” (serve ≥ soglia e più voti di chiunque altro; pareggio = nessuno).</div>':'')+
+ slayerUI()+genTips()}
+function render(){if(busy()){PENDING=1;return}renderNow()}
+function renderNow(){PENDING=0;const sy=window.scrollY||0;
+ const tb=[['setup','⚙️','Setup'],...(DB&&ISADM?[['lobby','📱','Lobby']]:[]),['grim','📖','Grimorio'],['night','🌙','Notte'],['day','☀️','Giorno']];
+ $('#tabs').innerHTML=tb.map(([k,i,l])=>`<button class="${S.tab===k?'on':''}" onclick="setTab('${k}')"><span>${i}</span><small>${l}</small></button>`).join('');
+ $('#top').innerHTML=(S.p.length?`<button class="on" onclick="startNight();S.tab='night';rc()">🌙 Notte ${S.phase==='night'?S.night:S.night+1}</button><button class="on" onclick="startDay();S.tab='day';rc()">☀️ Giorno</button>`:'')+`<button onclick="newGame()">🆕</button><button onclick="undo()">↩️</button><button onclick="thm()">🌓</button><button onclick="switchRole()">🚪</button><button onclick="resetAll()">🗑</button><span class="mu">${chip()}</span>`;
+ const w=win();$('#bn').innerHTML=hint()+(w?`<div class="bn">${w}${swBtn()}${/^(🎉|💀|⚖️)/.test(w)?'<br><button onclick="newGame()">🆕 Nuova partita</button>':''}</div>`:'');
+ $('#main').innerHTML={setup:vSetup,lobby:vLobby,grim:vGrim,night:vNight,day:vDay}[S.tab]();restoreUI(sy)}
+
+const TIPS={
+Mayor:'Se l’Imp lo attacca, di solito fai morire un altro: non uno Slayer/Vergine nuovi e inutilizzati, non i sospetti che servono al male (framing). Meglio chi ha già usato l’abilità. Uccidi il Mayor solo se tutti si fidano di lui. Obiettivo: portarlo ai 3 finali.',
+Empath:'Se avvelenato: un solo passo dalla verità (vicino malvagio → 0). Se il vicino buono muore, resta coerente se il nuovo è fidato. Troppi 0 creano un cerchio di fiducia senza il Demone: prima o poi dai 1 (meglio su un Minion).',
+FortuneTeller:'Red Herring: sì sempre coerenti. Info vere a un FT solo ubriaco (mai avvelenato) e solo se il bene sta perdendo.',
+Undertaker:'Ubriaco e 1ª esecuzione di un “top four” che si era rivelato: mostra la verità una volta. Avvelenato: mostra il bluff del Minion giustiziato, o il Baron per confermare un mondo Baron.',
+Ravenkeeper:'Se avvelenato chiedi ai malvagi cosa bluffano. Se sceglie un buono sospetto: mostra l’Imp; un fidatissimo: Spy o la verità. Non è un dramma, ha 1 sola abilità.',
+Washerwoman:'Un giocatore nuovo: legalo qui o alla Librarian. Mostra la Spy nei ping così può pianificare.',
+Librarian:'Se in dubbio: due non-Drunk + token Drunk. Nuovo giocatore sobrio: info vera, costruisce fiducia.',
+Investigator:'Meglio solo con 2 Minion; mai il giocatore nuovo come Minion. Se avvelenato punta due buoni non confermabili (non la Vergine).',
+Chef:'Se avvelenato: un numero 0–3 diverso dal vero.',
+Slayer:'Se bluffa: muovi finto i token e dì “Nothing happens”. Lascia 1–2 minuti di discussione, decide sempre lo Slayer.',
+Virgin:'Spy che nomina: di norma esegui (vuole fidarsi). Se un malvagio bluffa Vergine, simula il NO ABILITY.',
+Recluse:'Misregistra almeno una volta a notte. Se giustiziata: mostra un Minion (o Imp per un mondo Scarlet Woman). Mai creare un secondo Demone.',
+Spy:'Di solito mostrala buona. All’Undertaker mostra ciò che bluffava.',
+Imp:'Se la scelta è tua: uccidi come un vero demone (fidati/potenti), non gli “start knowing”, non i buoni sospetti. Evita di uccidere il Demone se finisce la partita.',
+Poisoner:'Avvelenato = info falsa più dannosa; onora sempre la scelta del Poisoner.',
+Drunk:'Info false, ma a un nuovo giocatore dai verità: non fargli perdere fiducia nel narratore.'};
+const GEN=['Mai “bilanciare” un errore: annuncia che hai sbagliato, senza dire cosa.','Parla in “se/allora” in pubblico, mai confermare ruoli.','Dai la verità sul regolamento sempre, anche a ubriachi/avvelenati.','Aiuta il male più spesso: al bene basta una fortuna, al male ogni giorno.','Chiedi ai malvagi cosa bluffano. Quando uno sceglie un ruolo, assecondalo.','Dopo un Pit-Hag sul Demone: nessun morto; secondo Demone: uccidine uno + un altro.','Se resta una via di vittoria per chi perde, non chiudere la partita.','Giorno breve (5 min) = pressione; notti lente e senza errori.'];
+const genTips=()=>'<details class="card"><summary><b>🎓 Regole d’oro del narratore</b></summary>'+GEN.map(t=>'<div>• '+t+'</div>').join('')+'</details>';
+function tgAl(i){const p=S.p[i];p.al=p.al?0:1;if(!p.al&&S.phase==='night')S.nd.push(i);rc()}
+function msgTo(i){const t=prompt('Messaggio privato per '+S.p[i].n+':');if(!t)return;S.msgs=S.msgs||{};(S.msgs[S.p[i].uid]=S.msgs[S.p[i].uid]||[]).push({t,n:S.night});rc()}
+function askTo(i,id){S.ask=S.ask||{};S.ask[S.p[i].uid]=S.night+id;rc()}
+function sendTeam(){S.msgs=S.msgs||{};const ev=S.p.filter(evil),tx=ev.map(p=>p.n+' ('+p.role+')').join(', ');ev.forEach(p=>{if(p.uid)(S.msgs[p.uid]=S.msgs[p.uid]||[]).push({t:'Team malvagio: '+tx+(p.role==='Imp'?' — Bluff (non in gioco): '+S.bl.join(', '):''),n:1})});rc()}
+const rndi=n=>Math.floor(Math.random()*n),pickr=a=>a[rndi(a.length)];
+const actNames=a=>(Array.isArray(a.t)?a.t:[a.t]).map(i=>S.p[i]?S.p[i].n:'?').join(' + ');
+function infoText(id,i,fals){const P=S.p,others=P.map((p,k)=>k).filter(k=>k!==i);
+ const num=(t,max)=>{if(!fals)return t;let x;do{x=rndi(max+1)}while(x===t);return x};
+ if(id==='Chef'){let c=0;for(let k=0;k<P.length;k++)if(evil(P[k])&&evil(P[(k+1)%P.length]))c++;return'Coppie di giocatori malvagi seduti vicini: '+num(c,3)}
+ if(id==='Empath'){const v=nb(i).filter(j=>evil(P[j])).length;return'Dei tuoi due vicini vivi, quelli malvagi sono: '+num(v,2)}
+ const type={Washerwoman:'T',Librarian:'O',Investigator:'M'}[id];
+ if(type){const names=Object.keys(R).filter(r=>ty(r)===type),pool=others.filter(k=>ty(P[k].role)===type);
+  if(!fals){if(!pool.length)return type==='O'?'Nessun Outsider è in gioco (0).':null;const c=pickr(pool),d=pickr(others.filter(k=>k!==c)),pr=Math.random()<.5?[c,d]:[d,c];return'Uno tra '+P[pr[0]].n+' e '+P[pr[1]].n+' è '+nm(P[c].role)}
+  let r,a,b,t=0;do{r=pickr(names);a=pickr(others);b=pickr(others.filter(k=>k!==a));t++}while(t<40&&(P[a].role===r||P[b].role===r));return'Uno tra '+P[a].n+' e '+P[b].n+' è '+nm(r)}
+ if(id==='Undertaker')return S.ex?'Oggi è stato giustiziato: '+nm(fals?pickr(Object.keys(R).filter(r=>r!==S.last&&ty(r)==='T')):S.last):null;
+ return null}
+function pushMsg(i,t){const p=S.p[i];if(!p||!p.uid)return false;S.msgs=S.msgs||{};(S.msgs[p.uid]=S.msgs[p.uid]||[]).push({t,n:S.night});return true}
+function sendInfo(id,i,fals){const t=infoText(id,i,fals);if(!t){toast('Niente da inviare per questo ruolo adesso.');return}
+ if(pushMsg(i,'🌙 '+t)){rc();toast('Inviato a '+esc(S.p[i].n)+': '+esc(t))}else toast('Giocatore non collegato. Dillo a voce: '+esc(t))}
+function sendFT(i,yes){const t='🔮 Risposta: '+(yes?'SÌ, uno dei due è il Demone':'NO, nessuno dei due è il Demone');if(pushMsg(i,t)){rc();toast('Inviato: '+(yes?'SÌ':'NO'))}else toast('Giocatore non collegato. Dillo a voce: '+(yes?'SÌ':'NO'))}
+function sendGrim(){const P=S.p,tx=P.map(p=>p.n+': '+(p.role==='Drunk'?'Drunk (crede di essere '+nm(p.fake)+')':nm(p.role))+(p.pois?' ☠avvelenato':'')+(p.rh?' 🔴Red Herring':'')+(p.al?'':' 💀morto')).join(' | ');
+ let n=0;P.forEach((p,i)=>{if(p.role==='Spy'&&pushMsg(i,'📖 Grimorio: '+tx))n++});if(n){rc();toast('Grimorio inviato alla Spy.')}else toast('Spy non collegata: mostrale il Grimorio a voce.')}
+function resendAll(){if(DB&&DB.forget)DB.forget();S.rx={};S.assignAt=Date.now();rc();toast('Ruoli reinviati ai telefoni collegati.')}
+function extras(id,x0){let h='';
+ if(['Chef','Empath','Washerwoman','Librarian','Investigator'].includes(id)||(id==='Undertaker'&&S.ex)){const ok=healthy(x0.p);h+=`<div class="row"><button class="${ok?'on':''}" onclick="sendInfo('${id}',${x0.i},0)">📨 Info vera</button><button class="${ok?'':'on'}" onclick="sendInfo('${id}',${x0.i},1)">📨 Info falsa</button><span class="mu">${ok?'sobrio e sano → vera':'avvelenato/ubriaco → falsa'}</span></div>`}
+ if(id==='Spy')h+='<button onclick="sendGrim()">📨 Invia il Grimorio alla Spy</button>';
+ if(id==='FortuneTeller'&&x0.p.uid){const a=ACTS[x0.p.uid];if(a&&a.k===S.night+id&&Array.isArray(a.t)){const yes=a.t.some(j=>S.p[j]&&(S.p[j].role==='Imp'||S.p[j].rh)),ok=healthy(x0.p),ans=ok?yes:!yes;h+=`<div class="hint">Ha scelto <b>${esc(actNames(a))}</b>. Risposta ${ok?'corretta':'FALSA (avvelenato/ubriaco)'}: <b>${ans?'SÌ':'NO'}</b> <span class="mu">(Recluse: decidi tu)</span> <button class="on" onclick="sendFT(${x0.i},${ans?1:0})">📨 Invia ${ans?'SÌ':'NO'}</button></div>`}}
+ return h}
+const pl=(ps,id)=>ps.filter(x=>x.p.uid).map(x=>{const a=ACTS[x.p.uid];return`<div class="mu">📱 ${esc(x.p.n)} <button onclick="msgTo(${x.i})">📨 Info</button><button onclick="askTo(${x.i},'${id}')">❓ Chiedi scelta</button>${a&&a.k===S.night+id?' → scelta: <b>'+esc(actNames(a))+'</b>':''}</div>`}).join('');
+function slayerUI(){if(!S.p.length)return'';const u=Object.keys(S.slu||{});return`<div class="card"><b>🏹 Slayer (una volta per partita)</b><br><select id="sh"><option value="-1">Chi spara…</option>${opts(p=>p.al,-2)}</select><select id="sy"><option value="-1">Bersaglio…</option>${opts(p=>p.al,-2)}</select><button onclick="doSlay()">Spara</button><div class="mu">Ha effetto solo se spara il vero Slayer, sobrio e sano; per chiunque altro: “Nothing happens”. ${u.length?'Già usata da: '+u.map(esc).join(', '):''}</div></div>`}
+function doSlay(){const h=+$('#sh').value,i=+$('#sy').value;if(!(h>=0)||!(i>=0)||!S.p[h]||!S.p[i])return;const sh=S.p[h],t=S.p[i];S.slu=S.slu||{};
+ const isSl=sh.role==='Slayer'||(sh.role==='Drunk'&&sh.fake==='Slayer');
+ if(!isSl){toast('“Nothing happens.” (chi spara non è lo Slayer: fai finta di controllare il Grimorio)');return}
+ if(S.slu[sh.n]){toast('Questo Slayer ha già usato la sua abilità: “Nothing happens.”');return}
+ S.slu[sh.n]=1;
+ if(sh.role==='Slayer'&&healthy(sh)&&t.al&&t.role==='Imp'){toast('L’Imp muore! (non rivelare chi è morto)');kill(i,'day');return}
+ if(sh.role==='Slayer'&&healthy(sh)&&t.al&&t.role==='Recluse'&&confirm('Il bersaglio è la Recluse. Registrarla come Imp (muore)?')){kill(i,'day');return}
+ toast('“Nothing happens.”'+(sh.role==='Drunk'||sh.pois?' (Slayer ubriaco/avvelenato: l’abilità è comunque consumata)':''));rc()}
+const voteCount=()=>Object.entries(VOTES).filter(([u,v])=>{const p=S.p.find(x=>x.uid===u);return S.cur&&v.nid===S.cur.id&&v.v&&p&&(p.al||!p.vu)}).length;
+function openVote(){const by=+$('#nb').value,to=+$('#nt').value;if(by<0||to<0)return;S.cur={by,to,id:Date.now()};rc()}
+function closeVote(){const c=voteCount(),b=S.cur.by,t=S.cur.to;S.p.forEach(p=>{const v=p.uid&&VOTES[p.uid];if(v&&v.nid===S.cur.id&&v.v&&!p.al)p.vu=1});S.cur=null;addNom(b,t,c)}
+function voteCard(){if(!S.cur)return'';return`<div class="card"><b>🗳 Voto aperto</b>: ${esc(S.p[S.cur.by].n)} → ${esc(S.p[S.cur.to].n)} · voti dall’app: <b>${voteCount()}</b>${voters().length?'<div class="mu">'+voters().map(esc).join(', ')+'</div>':''} <button class="on" onclick="closeVote()">Chiudi e registra</button></div>`}
+function useLobby(){S.uidmap={};S.names=Object.keys(LOB).map(k=>{S.uidmap[LOB[k].name]=k;return LOB[k].name}).join('\n');S.tab='setup';rc()}
+function sync(){if(!DB||!ISADM)return;clearTimeout(sync.t);sync.t=setTimeout(pushAll,700)}
+const IC={Washerwoman:'🧺',Librarian:'📖',Investigator:'🔎',Chef:'👨‍🍳',Empath:'💙',FortuneTeller:'🔮',Undertaker:'⚰️',Monk:'🙏',Ravenkeeper:'🐦',Virgin:'💍',Slayer:'🏹',Soldier:'🛡️',Mayor:'🏛️',Butler:'🛎️',Drunk:'🍺',Recluse:'🕯️',Saint:'👼',Poisoner:'🧪',Spy:'🎭',ScarletWoman:'💋',Baron:'🎩',Imp:'🔱'};
+const nm=r=>r.replace(/([a-z])([A-Z])/g,'$1 $2');
+const tk=(r,c='')=>`<span class="tk ${ty(r)} ${c}">${IC[r]||'❔'}</span>`;
+const randomRoom=()=>{try{const a=new Uint8Array(14);crypto.getRandomValues(a);return 'r'+Array.from(a,x=>'0123456789abcdefghijklmnopqrstuvwxyz'[x%36]).join('')}catch(e){return 'r'+Math.random().toString(36).slice(2,14)}};let ROOM='';try{const fromLink=(location.hash.match(/r=([\w-]+)/)||[])[1];if(fromLink){ROOM=fromLink;localStorage.setItem('botcroom',ROOM)}else{ROOM=localStorage.getItem('botcroom')||'';if(!ROOM){ROOM=randomRoom();localStorage.setItem('botcroom',ROOM)}}}catch(e){ROOM=randomRoom()}
+// CONFIGURAZIONE: inserisci qui URL del progetto e chiave PUBLISHABLE di Supabase.
+// Non inserire mai una secret key o service_role key nel sito.
+const SUPABASE_URL='https://rdtkjbbccqkkvtgkoepm.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_xqzaEe_asl33NArKRhj5Kg_TB916SRT';
+const TP='botc-'+ROOM,DIAG={sent:0,err:''};
+let SB=null;
+const lnk=()=>location.href.split('#')[0]+'#r='+encodeURIComponent(ROOM);
+const uidL=()=>{let u=sget('botcuid');if(!u){u='u'+Math.random().toString(36).slice(2,10);sset('botcuid',u)}return u};
+const mkSnap=(p,d)=>({id:p.split('/').pop(),exists:d!=null,data:()=>d});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const nextN=(()=>{let s=Date.now();return()=>++s})();
+let EPOCH='',HOSTGEN='',HOSTAT=0;
+const PQ=[];let PBUSY=false;
+const RTCHANNELS=new Map(),PUBCHANNELS=new Map();
+const redrawAny=()=>{if(window.reDraw)window.reDraw();else render()};
+
+// Pubblicazione via HTTP Broadcast: non crea un abbonamento WebSocket superfluo
+// sul canale di invio di ogni telefono. Supabase risponde con lo stato dell'invio.
+function publisherFor(topic){
+ let ch=PUBCHANNELS.get(topic);
+ if(!ch){ch=SB.channel(topic,{config:{broadcast:{self:false,ack:true}}});PUBCHANNELS.set(topic,ch)}
+ return ch;
+}
+function realtimeFor(topic){
+ let e=RTCHANNELS.get(topic);if(e)return e;
+ if(!SB)throw new Error('Configura prima Supabase URL e Publishable Key.');
+ const ch=SB.channel(topic,{config:{broadcast:{self:false,ack:true}}});
+ let resolveReady;
+ e={topic,ch,status:'joining',ready:new Promise(resolve=>{resolveReady=resolve}),resolveReady,handlers:new Set(),stateHandlers:new Set()};
+ RTCHANNELS.set(topic,e);
+ ch.on('broadcast',{event:'message'},packet=>{
+  const env=packet&&packet.payload;if(!env||!env.message)return;
+  const j={id:env.id||('rx-'+Date.now()+'-'+Math.random()),time:typeof env.time==='number'?env.time:Date.now()/1000};
+  e.handlers.forEach(fn=>{try{fn(env.message,j)}catch(err){DIAG.err=String(err&&err.message||err)}});
+ });
+ ch.subscribe(status=>{
+  if(status==='SUBSCRIBED'){e.status='ok';e.resolveReady(true)}
+  else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED')e.status=status.toLowerCase();
+  else e.status='joining';
+  e.stateHandlers.forEach(fn=>{try{fn()}catch(err){}});
+ });
+ return e;
+}
+function relay(topic,obj){PQ.push({t:topic,b:JSON.stringify(obj),a:0});runPQ()}
+async function runPQ(){
+ if(PBUSY)return;PBUSY=true;
+ while(PQ.length){const it=PQ[0];
+  try{
+   if(!SB)throw new Error('Supabase non configurato');
+   const env={id:'m'+nextN()+'-'+Math.random().toString(36).slice(2,8),time:Date.now()/1000,message:JSON.parse(it.b)};
+   const resp=await publisherFor(it.t).send({type:'broadcast',event:'message',payload:env});
+   const status=typeof resp==='string'?resp:(resp&&resp.status)||'';
+   if(status&&status!=='ok')throw new Error('Supabase Realtime: '+status);
+   PQ.shift();DIAG.sent++;DIAG.err='';if(NETST.slice(0,3)==='err')NETST='ok';
+  }catch(err){
+   DIAG.err=String(err&&err.message||err);const msg=DIAG.err.toLowerCase();
+   if(msg.includes('429')||msg.includes('rate limit')||msg.includes('too many'))NETST='err:realtime-limit';
+   else if(!SB)NETST='err:config';
+   else NETST='err:realtime';
+   redrawAny();if(++it.a>4)PQ.shift();else await sleep(Math.min(8000,800*it.a));continue;
+  }
+  await sleep(80);
+ }
+ PBUSY=false;
+}
+function listen(topics,since,onmsg,onst){
+ const seen=new Set(),entries=topics.map(realtimeFor);let dead=false,prior=null;
+ const receive=(m,j)=>{if(dead||!m)return;if(j&&seen.has(j.id))return;if(j&&j.id){seen.add(j.id);if(seen.size>3000)seen.clear()}try{onmsg(m,j||{time:Date.now()/1000,id:'rx-'+Math.random()})}catch(err){DIAG.err=String(err&&err.message||err)}};
+ const update=()=>{
+  if(dead)return;const all=entries.every(e=>e.status==='ok');
+  const bad=entries.some(e=>['channel_error','timed_out','closed'].includes(e.status));
+  const state=all?'ok':bad?'error':'joining';
+  if(state!==prior){prior=state;onst(all)}
+ };
+ entries.forEach(e=>{e.handlers.add(receive);e.stateHandlers.add(update)});update();
+ return{close:()=>{dead=true;entries.forEach(e=>{e.handlers.delete(receive);e.stateHandlers.delete(update)})}};
+}
+const fit=o=>{let s=JSON.stringify(o);while(s.length>3300&&o.d&&o.d.msgs&&o.d.msgs.length>1){o.d.msgs=o.d.msgs.slice(1);s=JSON.stringify(o)}return o};
+let OFFLOG=6000;const OFFMS=150000,PINGMS=60000;
+function logEv(x){S.log=S.log||[];S.log.push({t:Date.now(),x});if(S.log.length>80)S.log.shift();save();render()}
+function mkHost(){
+ HOSTGEN='h'+Math.random().toString(36).slice(2,12)+Date.now().toString(36);
+ const store={lobby:{},acts:{},votes:{}},sec={},subs={},seenAt={},pend={},lastIb={},off=new Set(),evAt={},pendOff={};let lastPub='';
+ try{EPOCH=localStorage.getItem('botcep')||''}catch(e){}
+ if(!EPOCH){EPOCH='e'+Math.random().toString(36).slice(2,10);try{localStorage.setItem('botcep',EPOCH)}catch(e){}}
+ const q0=c=>({docs:Object.entries(store[c]).map(([k,v])=>({id:k,data:()=>v}))}),note=c=>(subs[c]||[]).forEach(f=>f(q0(c)));
+ const tdown=TP+'-d',tup=TP+'-up',tin=u=>sec[u]?TP+'-i-'+sec[u]:null,isOn=k=>Date.now()-(seenAt[k]||0)<OFFMS;
+ const nmOf=u=>(store.lobby[u]&&store.lobby[u].name)||((S.p.find(p=>p.uid===u)||{}).n)||'Un giocatore';
+ const calc=()=>{const s=new Set(Object.keys(seenAt).filter(isOn)),prev=new Set(ONL);let ch=false;
+  prev.forEach(u=>{if(!s.has(u)){ch=true;const nn=nmOf(u);pendOff[u]=setTimeout(()=>{delete pendOff[u];if(!ONL.has(u)){off.add(u);logEv('⚪ '+nn+' si è disconnesso')}},OFFLOG)}});
+  s.forEach(u=>{if(!prev.has(u)){ch=true;if(pendOff[u]){clearTimeout(pendOff[u]);delete pendOff[u]}else if(off.has(u)){off.delete(u);logEv('🟢 '+nmOf(u)+' è tornato')}}});
+  if(ch){ONL.clear();s.forEach(u=>ONL.add(u))}
+  let pr=false;Object.keys(store.lobby).forEach(u=>{if(!isOn(u)&&!S.p.some(p=>p.uid===u)){delete store.lobby[u];delete store.acts[u];delete store.votes[u];pr=true}});
+  if(pr)note('lobby');
+  if(ch||pr){render();if(typeof sync==='function')sync()}};
+ const give=(u,p,d)=>{const o={t:'d',p,d,n:nextN(),e:EPOCH};(pend[u]=pend[u]||{})[p]=o;if(tin(u))relay(tin(u),fit(o))};
+ const onUp=(m,j)=>{if(m&&m.t==='b'&&typeof m.u==='string'&&/^[\w-]{4,24}$/.test(m.u)){seenAt[m.u]=0;calc();return}
+  if(!m||typeof m.u!=='string'||!/^[\w-]{4,24}$/.test(m.u))return;if(m.e!==EPOCH)return;
+  const u=m.u,fresh=Date.now()-(j.time||0)*1000<45000;seenAt[u]=(j.time||0)*1000||Date.now();
+  if(typeof m.k==='string'&&/^[\w-]{8,40}$/.test(m.k)&&sec[u]!==m.k){sec[u]=m.k;Object.values(pend[u]||{}).forEach(o=>relay(tin(u),fit({...o,n:nextN()})))}
+  if(m.t==='b')return;
+  if(m.t==='e'){if(m.x==='rx'){if((j.time||0)*1000>=(S.assignAt||0)-3000){S.rx=S.rx||{};if(!S.rx[u]){S.rx[u]=Date.now();save();logEv('📥 '+nmOf(u)+' ha ricevuto il ruolo')}}calc();return}if(fresh&&m.x==='role'&&Date.now()-(evAt[u]||0)>60000){evAt[u]=Date.now();logEv('👁 '+nmOf(u)+' ha guardato il suo ruolo')}calc();return}
+  if(m.t==='s'){const[col,id]=String(m.p).split('/');if(id!==u||!store[col])return;
+   if(col==='lobby'){let n=String(m.d&&m.d.name||'').trim().slice(0,20)||'Giocatore';
+    const old=Object.entries(store.lobby).find(([k,v])=>k!==u&&v.name.toLowerCase()===n.toLowerCase()&&!isOn(k));
+    if(old){const o=old[0];delete store.lobby[o];delete store.acts[o];delete store.votes[o];if(pend[o]){pend[u]=pend[o];delete pend[o]}try{if(typeof rejoin==='function')rejoin(o,u)}catch(e){}}
+    const b=n;let i=2;while(Object.entries(store.lobby).some(([k,v])=>k!==u&&v.name.toLowerCase()===n.toLowerCase()))n=b+' '+i++;m.d={name:n};
+    const was=store.lobby[u];if(fresh){if(!was)logEv('👋 '+n+' è entrato in sala');else if(was.name!==n)logEv('✏️ '+was.name+' ora si chiama '+n)}
+    store.lobby[u]=m.d;give(u,m.p,m.d)}
+   else{const pv=store[col][u],same=JSON.stringify(pv)===JSON.stringify(m.d);
+    if(fresh&&col==='votes'){if(m.d&&m.d.v&&(!pv||!pv.v||pv.nid!==m.d.nid))logEv('🗳 '+nmOf(u)+' ha votato');else if(m.d&&!m.d.v&&pv&&pv.v)logEv('↩️ '+nmOf(u)+' ha ritirato il voto')}
+    if(fresh&&col==='acts'&&m.d&&!same)logEv('🌙 '+nmOf(u)+' ha scelto '+actNames(m.d));
+    store[col][u]=m.d}
+   note(col)}
+  calc();if(m.t==='h'&&typeof sync==='function')sync()};
+ listen([tup],'15m',onUp,st=>{NETST=st?'ok':'conn';render()});
+ const hb=()=>relay(tdown,{t:'hb',n:nextN(),e:EPOCH,h:HOSTGEN});hb();setInterval(hb,240000);setInterval(calc,20000);
+ return{calc,seen:seenAt,forget:()=>{Object.keys(lastIb).forEach(k=>delete lastIb[k]);lastPub=''},
+  doc:p=>({set:async d=>{if(p==='pub/state'){const s=JSON.stringify(d);if(s===lastPub)return;lastPub=s;relay(tdown,fit({t:'d',p,d,n:nextN(),e:EPOCH}))}
+    else if(p.startsWith('inbox/')){const u=p.slice(6),s=JSON.stringify(d);if(lastIb[p]===s)return;lastIb[p]=s;give(u,p,d)}},
+   delete:async()=>{const[col,id]=p.split('/');if(store[col]){delete store[col][id];note(col)}
+    if(col==='lobby'||col==='inbox'){lastIb['inbox/'+id]='null';give(id,'inbox/'+id,null);if(col==='lobby')give(id,p,null)}}}),
+  collection:c=>({onSnapshot:f=>{(subs[c]=subs[c]||[]).push(f);f(q0(c));return()=>{}}})}}
+function mkClient(){
+ const cache={},cE={},subs={},top={},last={};try{const saved=JSON.parse(sget('botclast-'+ROOM)||'{}');if(saved&&typeof saved==='object')Object.assign(last,saved)}catch(e){}
+ const saveLast=()=>{try{sset('botclast-'+ROOM,JSON.stringify(last))}catch(e){}};
+ let conn=false,EP=sget('botc-ep-client-'+ROOM)||'',epN=Number(sget('botc-epn-'+ROOM))||0,clientHostGen=sget('botc-hostgen-'+ROOM)||'',sec=sget('botcsec-'+ROOM);
+ if(!sec){sec='s'+Math.random().toString(36).slice(2,12)+Math.random().toString(36).slice(2,8);sset('botcsec-'+ROOM,sec)}
+ const emit=(p,d)=>{cache[p]=d;(subs[p]||[]).forEach(f=>f(mkSnap(p,d)))};
+ const up=o=>relay(TP+'-up',{...o,e:EP||undefined}),hello=()=>up({u:UID,k:sec,t:'h'});
+ const replayLast=()=>{hello();Object.values(last).forEach(up)};
+ const learn=(m)=>{if(!m.e||m.e===EP)return false;const first=!EP;EP=m.e;epN=Number(m.n)||Date.now();try{sset('botc-ep-client-'+ROOM,EP);sset('botc-epn-'+ROOM,String(epN))}catch(e){}
+  Object.keys(cache).forEach(p=>{if(cE[p]&&cE[p]!==EP){emit(p,null);delete cE[p];delete top[p]}});
+  if(!first){Object.keys(last).forEach(p=>{if(!p.startsWith('lobby/'))delete last[p]});saveLast()}if(conn)replayLast();return true};
+ listen([TP+'-d',TP+'-i-'+sec],'3h',(m,j)=>{
+   if(m.t==='hb'){const epochChanged=learn(m);HOSTAT=Math.max(HOSTAT,(j.time||0)*1000);if(m.h&&m.h!==clientHostGen){clientHostGen=m.h;try{sset('botc-hostgen-'+ROOM,clientHostGen)}catch(e){}if(conn&&!epochChanged)replayLast()}redrawAny();return}
+   if(m.t!=='d'||typeof m.p!=='string')return;learn(m);
+   if(m.e&&EP&&m.e!==EP)return;if((top[m.p]||0)>=m.n)return;top[m.p]=m.n;cE[m.p]=m.e;
+   if(m.p==='pub/state')HOSTAT=Math.max(HOSTAT,(j.time||0)*1000);emit(m.p,m.d)},
+  st=>{const was=conn;conn=st;NETST=st?'ok':'conn';if(st&&!was)replayLast();redrawAny()});
+ setInterval(()=>{if(conn&&!document.hidden)up({u:UID,k:sec,t:'p'})},PINGMS);
+ const bye=()=>{try{up({u:UID,k:sec,t:'b'})}catch(e){}};
+ if(window.addEventListener)window.addEventListener('pagehide',bye);
+ if(document.addEventListener)document.addEventListener('visibilitychange',()=>{if(document.hidden)bye();else if(conn){hello();Object.values(last).forEach(up);redrawAny()}});
+ return{bye,doc:p=>({set:async d=>{if(p.startsWith('evt/')){if(conn)up({u:UID,k:sec,t:'e',x:d&&d.x});return}const o={u:UID,k:sec,t:'s',p,d};last[p]=o;saveLast();if(conn)up(o)},delete:async()=>{},onSnapshot:f=>{(subs[p]=subs[p]||[]).push(f);if(p in cache)f(mkSnap(p,cache[p]));return()=>{}}})}}
+const hostUp=()=>Date.now()-HOSTAT<360000;
+const voters=()=>S.cur?S.p.filter(p=>{const v=p.uid&&VOTES[p.uid];return v&&v.nid===S.cur.id&&v.v&&(p.al||!p.vu)}).map(p=>p.n):[];
+const actCard=n=>{const l=(S.log||[]).slice(-n).reverse();return`<details class="card" ${n<=6?'':'open'}><summary><b>📋 Attività recente</b> <span class="mu">(${(S.log||[]).length})</span></summary>${l.map(e=>{const d=new Date(e.t);return'<div class="mu">'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0')+' · '+esc(e.x)+'</div>'}).join('')||'<div class="mu">Nessuna attività.</div>'}</details>`};
+function resetAll(){if(!confirm('RESET TOTALE: cancella partita, sala d’attesa e collegamenti. Chi è ancora online rientra da solo; chi è uscito sparisce. Continuare?'))return;try{localStorage.setItem('botcep','e'+Math.random().toString(36).slice(2,10));localStorage.removeItem('botc')}catch(e){}if(location.reload)location.reload()}
+function toggleExcl(k){S.excl=S.excl||{};S.excl[k]=!S.excl[k];autoNames();rc()}
+function vCircle(){const n=S.p.length;if(!n)return'';return`<div class="card" style="position:relative;height:${Math.min(440,250+n*12)}px">`+S.p.map((p,i)=>{const a=2*Math.PI*i/n-Math.PI/2,x=50+38*Math.cos(a),y=50+38*Math.sin(a);return`<div onclick="tgAl(${i})" style="position:absolute;left:${x}%;top:${y}%;transform:translate(-50%,-50%);text-align:center;font-size:11px;width:66px;line-height:1.2;${p.al?'':'opacity:.4'}"><div style="display:flex;justify-content:center">${tk(p.role)}</div>${esc(p.n)}${p.pois?' ☠':''}${p.al?'':' 💀'}</div>`}).join('')+'</div>'}
+const gridTools=()=>`<div class="card c"><button class="${S.circ?'on':''}" onclick="S.circ=!S.circ;rc()">⭕ Cerchio</button><button onclick="resendAll()">🔁 Reinvia ruoli</button><button onclick="exportG()">📤 Esporta</button><button onclick="importG()">📥 Importa</button></div>`;
+async function exportG(){const t=JSON.stringify(S);try{await navigator.clipboard.writeText(t);toast('Partita copiata negli appunti.')}catch(e){prompt('Copia questo testo:',t)}}
+function importG(){const t=prompt('Incolla la partita esportata:');if(!t)return;try{const o=JSON.parse(t);if(!o||!Array.isArray(o.p))throw 0;S=Object.assign({p:[],night:0,phase:'setup',noms:[],done:{},tab:'setup',sel:[],names:'',nd:[],monk:-1,bl:[],last:'',ex:0,saint:0,log:[],excl:{}},o);rc()}catch(e){toast('Dati non validi.')}}
+
+
+function autoSel(){const n=S.names.split('\n').map(x=>x.trim()).filter(Boolean).length,c=CNT[n];if(!c){toast('Servono 5–15 giocatori nel Setup.');return}
+ const by=t=>shuf(Object.keys(R).filter(r=>ty(r)===t)),M=by('M').slice(0,c[2]),b=M.includes('Baron');
+ S.sel=[...by('T').slice(0,c[0]-(b?2:0)),...by('O').slice(0,c[1]+(b?2:0)),...M,'Imp'];rc()}
+const notesCard=()=>`<details class="card"><summary><b>🗒 Note del narratore</b></summary><textarea rows="5" onchange="S.notes=this.value;save()" placeholder="Bluff dei malvagi, promesse, errori da annunciare…">${esc(S.notes||'')}</textarea></details>`;
+const bluffCard=()=>S.bl&&S.bl.length?`<div class="card"><b>🎭 Bluff del Demone</b> ${S.bl.map(r=>tk(r)+nm(r)).join(' · ')} <button onclick="newBl()">🎲</button></div>`:'';
+function newBl(){const ip=new Set(S.p.map(p=>p.role).concat(S.p.map(p=>p.fake)));const f=t=>shuf(Object.keys(R).filter(r=>ty(r)===t&&!ip.has(r)));S.bl=[...f('T').slice(0,2),...f('O').slice(0,1)];rc()}
+function newGame(){if(!confirm('Iniziare una nuova partita? Nomi e giocatori collegati restano, la partita in corso viene chiusa.'))return;
+ EPOCH='e'+Math.random().toString(36).slice(2,10);try{localStorage.setItem('botcep',EPOCH)}catch(e){}relay(TP+'-d',{t:'hb',n:nextN(),e:EPOCH,h:HOSTGEN});
+ const del=[];if(DB){S.p.forEach(p=>p.uid&&del.push('inbox/'+p.uid));Object.keys(ACTS).forEach(k=>del.push('acts/'+k));Object.keys(VOTES).forEach(k=>del.push('votes/'+k))}
+ FORM={};Object.assign(S,{p:[],slu:{},mayorWin:0,rx:{},teamSent:0,assignAt:0,night:0,phase:'setup',noms:[],done:{},nd:[],monk:-1,bl:[],last:'',ex:0,saint:0,msgs:{},ask:{},cur:null,tEnd:0,bc:'',notes:'',tab:'setup'});
+ rc();window.scrollTo(0,0);del.forEach(p=>{try{DB.doc(p).delete().catch(()=>{})}catch(e){}})}
+let TT;function toast(t){const e=$('#toast');e.innerHTML=t;e.style.display='block';clearTimeout(TT);TT=setTimeout(()=>{e.style.display='none'},7000)}
+function hint(){const n=S.p.length;let t,bar='';
+ if(!n)t='👉 Controlla i nomi nel <b>Setup</b>, scegli i ruoli (✨ Suggerisci) e premi “Assegna a caso”.';
+ else if(S.phase==='setup'){const w=S.p.filter(p=>p.uid),r=w.filter(p=>S.rx&&S.rx[p.uid]).length;t='👉 Ruoli assegnati. Ricevuti sui telefoni: <b>'+r+'/'+w.length+'</b>'+(r<w.length?' (se manca qualcuno usa 🔁 Reinvia ruoli nel Grimorio)':'')+'. Premi <b>🌙 Notte 1</b> per iniziare.'}
+ else if(S.phase==='night'){const ids=(S.night===1?ORD1:ORD2).filter(id=>id==='dusk'||id==='dawn'||(id==='minfo'||id==='dinfo'?S.night===1&&n>=7:inRole(id).length>0)),d=ids.filter(id=>S.done[S.night+id]).length;
+  t='👉 Notte '+S.night+': passi fatti '+d+'/'+ids.length+(d===ids.length?'. Ora premi <b>☀️ Giorno</b>.':'. Segui i passi nella scheda <b>Notte</b>.');bar='<div class="prog"><i style="width:'+Math.round(100*d/ids.length)+'%"></i></div>'}
+ else t='👉 Giorno: lascia discutere, poi nomination e voto. Quando c’è stata (o no) l’esecuzione, premi <b>🌙 Notte '+(S.night+1)+'</b>.';
+ return(STAND&&ISADM&&NETST!=='ok'?'<div class="hint warn">⚠️ Collegamento ai telefoni non attivo ('+esc(NETST||'in corso')+'). Puoi continuare in modalità locale: Setup → Distribuzione segreta (passa il telefono a ogni giocatore).</div>':'')+'<div class="hint">'+t+bar+'</div>'}
+function undo(){if(H.length<2)return;H.pop();S=JSON.parse(H[H.length-1]);render();save();sync()}
+function thm(){const d=document.documentElement;d.dataset.theme=d.dataset.theme==='dark'?'light':'dark'}
+const fmt=e=>{const s=Math.max(0,Math.ceil((e-Date.now())/1000));return s?Math.floor(s/60)+':'+String(s%60).padStart(2,'0'):'⏰ Tempo scaduto'};
+function tick(){document.querySelectorAll('[data-e]').forEach(el=>{el.textContent=fmt(+el.dataset.e)})}
+setInterval(tick,1000);
+const timerCard=()=>`<div class="card"><b>⏱ Discussione</b> ${S.tEnd?`<span class="big" data-e="${S.tEnd}">${fmt(S.tEnd)}</span><button onclick="S.tEnd=0;rc()">Stop</button>`:[3,5,8].map(m=>`<button onclick="S.tEnd=Date.now()+${m}*60000;rc()">${m} min</button>`).join('')} <button onclick="bcast()">📢 Annuncio</button>${S.bc?'<button onclick="S.bc=\'\';rc()">✕ annuncio</button>':''}</div>`;
+function bcast(){const t=prompt('Annuncio per tutti i giocatori:');if(t){S.bc=t;rc()}}
+const swBtn=()=>/Scarlet/.test(win())&&S.p.some(p=>p.al&&p.role==='ScarletWoman')?'<br><button onclick="swPromote()">Trasforma la Scarlet Woman in Imp</button>':'';
+function swPromote(){const x=S.p.find(p=>p.al&&p.role==='ScarletWoman');if(!x)return;x.role='Imp';if(x.uid){S.msgs=S.msgs||{};(S.msgs[x.uid]=S.msgs[x.uid]||[]).push({t:'Sei diventato l’Imp! Ogni notte scegli chi muore.'})}rc()}
+function vLobby(){const ids=Object.keys(LOB),EX=S.excl||{},ig=new Set(S.p.map(p=>p.uid)),wait=ids.filter(k=>!ig.has(k)),game=S.p.filter(p=>p.uid);
+ return`<div class="card"><b>🔗 Link per tutti</b><div class="mu">Tutti aprono lo stesso link, scelgono Giocatore o Storyteller e scrivono il nome. Nessun account: basta il browser. Tieni aperta questa scheda per tutta la partita.</div><input readonly value="${esc(lnk())}" onclick="this.select()" style="width:92%"><div><button class="on" onclick="cpL()">📋 Copia link</button><button onclick="shL()">📤 Condividi</button></div><div class="mu">Stanza: <b>${esc(ROOM)}</b> ${NETST==='ok'?'🟢':NETST.slice(0,3)==='err'?'🔴 '+esc(NETST):'🟡'}</div><input id="rm" value="${esc(ROOM)}" maxlength="24" style="width:50%"><button onclick="setRoom()">Cambia stanza</button><details class="mu"><summary>ℹ️ Servizio di collegamento</summary>Il gioco usa Supabase Realtime. Tutti i telefoni devono aprire la stessa versione del sito e condividere lo stesso link della stanza.</details></div>
+<div class="card"><b>⏳ Sala d’attesa (${wait.length})</b>${wait.map(k=>`<div class="row"><span style="flex:1">${ONL.has(k)?'🟢':'⚪'} ${esc(LOB[k].name)} ${EX[k]?'<span class="warn">escluso</span>':'<span class="g">ammesso</span>'}</span><button onclick="toggleExcl('${k}')">${EX[k]?'✔ Ammetti':'🚫 Escludi'}</button><button onclick="kick('${k}')">✕</button></div>`).join('')||'<div class="mu">Nessuno in attesa. I giocatori usciti spariscono da soli.</div>'}<button class="on" onclick="useLobby()">Usa questi nomi nel Setup</button></div>
+${game.length?`<div class="card"><b>🎲 In partita (${game.length})</b>${game.map(p=>`<div>${ONL.has(p.uid)?'🟢':'⚪ <span class="mu">offline</span>'} ${esc(p.n)} ${p.al?'':'💀'}</div>`).join('')}</div>`:''}
+${actCard(20)}<div class="card mu">I nomi entrano da soli nel Setup finché non assegni i ruoli. Dopo “Assegna a caso” ruoli e info arrivano da soli sui telefoni. L’ordine dei nomi nel Setup = ordine di seduta.</div>`}
+function rejoin(o,u){S.p.forEach(p=>{if(p.uid===o)p.uid=u});if(S.uidmap)Object.keys(S.uidmap).forEach(n=>{if(S.uidmap[n]===o)S.uidmap[n]=u});['msgs','ask'].forEach(k=>{if(S[k]&&S[k][o]){S[k][u]=S[k][o];delete S[k][o]}});if(S.excl&&S.excl[o]){S.excl[u]=S.excl[o];delete S.excl[o]}logEv('🔁 Un giocatore è rientrato con lo stesso nome e ha recuperato il suo posto');save();sync()}
+function setRoom(){const r=($('#rm').value||'').trim().replace(/[^\w-]/g,'').slice(0,20);if(!r)return;try{localStorage.setItem('botcroom',r)}catch(e){}if(location.hash)location.hash='';if(location.reload)location.reload()}
+function autoNames(){if(S.p.length)return false;const cur=S.names.split('\n').map(x=>x.trim()).filter(Boolean);S.uidmap=S.uidmap||{};const EX=S.excl||{},LE=Object.entries(LOB).filter(([k])=>!EX[k]),inL=new Set(LE.map(([k,v])=>v.name));
+ const l=cur.filter(n=>!(n in S.uidmap)||inL.has(n));LE.forEach(([k,v])=>{S.uidmap[v.name]=k;if(!l.includes(v.name))l.push(v.name)});
+ Object.keys(S.uidmap).forEach(n=>{if(!inL.has(n))delete S.uidmap[n]});const t=l.join('\n');if(t!==S.names){S.names=t;save();return true}return false}
+const chip=()=>STAND&&ISADM?(NETST==='ok'?'🟢 '+ONL.size+' online':NETST.slice(0,3)==='err'?'🔴 '+NETST:'🟡 …'):'';
+async function cpL(){try{await navigator.clipboard.writeText(lnk());toast('Link copiato')}catch(e){prompt('Copia il link:',lnk())}}
+async function shL(){try{await navigator.share({title:'Blood on the Clocktower',url:lnk()})}catch(e){}}
+function kick(k){if(DB&&confirm('Rimuovere dalla lobby?'))DB.doc('lobby/'+k).delete().catch(()=>{})}
+async function pushAll(){const P=S.p,w=win(),over=/^(🎉|💀|⚖️)/.test(w);
+ try{await DB.doc('pub/state').set({phase:S.phase,night:S.night,win:over?w:'',ann:S.nd.map(i=>P[i]?P[i].n:''),nom:S.cur?{by:S.cur.by,to:S.cur.to,id:S.cur.id,v:voters()}:null,tEnd:S.tEnd||0,bc:S.bc||'',e:EPOCH,rv:over?P.map(p=>({n:p.n,r:p.role,f:p.fake||''})):[],players:P.map(p=>({n:p.n,al:p.al,vu:p.vu,uid:p.uid||'',on:p.uid?(ONL.has(p.uid)?1:0):1}))});
+ for(const p of P){if(!p.uid)continue;const r=p.fake||p.role;await DB.doc('inbox/'+p.uid).set({role:r,ab:R[r][1],msgs:(S.msgs&&S.msgs[p.uid])||[],ask:(S.ask&&S.ask[p.uid])||'',g:S.assignAt||0})}}catch(e){}}
+function PA(){
+ $('#top').innerHTML='';$('#tabs').innerHTML='';document.querySelector('h2').textContent='🕯️ Blood on the Clocktower';
+ const st={ib:null,pb:null,lob:null,rev:0,sent:'',v:0,n:0,notes:{},pick:[],rx:''};
+ try{st.notes=JSON.parse(localStorage.getItem('botcn'))||{}}catch(e){}
+ const dr=()=>{if(busy()){PENDING=1;return}drNow()};FLUSH=()=>drNow();const drNow=()=>{PENDING=0;const sy=window.scrollY||0;
+  const ib=st.ib,pb=st.pb,me=pb&&pb.players.find(p=>p.uid===UID);let h='<div class="mu c">'+(NETST==='ok'?'🟢 Connesso':'🟡 Connessione…')+'</div>';
+  
+  if((!st.lob&&!st.want)||st.edit)h+=`<div class="card c"><b>Benvenuto a Ravenswood Bluff</b><p class="mu">Scrivi il tuo nome: resterai in sala d'attesa finché lo Storyteller non avvia la partita.</p><input id="pn" placeholder="Il tuo nome" maxlength="20" value="${esc(st.name||'')}" style="width:80%" autocomplete="off"><br><button class="on bigb" onclick="pJoin()">${st.edit?'Salva nome':'Entra in sala d\'attesa'}</button>${st.edit?'<br><button onclick="pCancel()">Annulla</button>':''}</div>`;
+  if(pb&&pb.win)h+=`<div class="bn">${esc(pb.win)}</div>`;
+  if(pb&&pb.bc)h+=`<div class="bn">📢 ${esc(pb.bc)}</div>`;
+  if((st.lob||st.want)&&!st.edit&&!(ib&&ib.role)){const nx=st.lob?st.lob.name:st.want,net=STAND?(NETST==='ok'?(hostUp()?'✅ Connesso: lo Storyteller è presente, attendi l\'inizio…':'📡 Connesso al servizio: in attesa che lo Storyteller apra la sala…'):(NETST.slice(0,3)==='err'?'⚠️ '+esc(NETST):'📡 Connessione al servizio…')):(pb?'✅ Lo Storyteller è presente: attendi l\'inizio…':'📡 In attesa dello Storyteller…');h+=`<div class="card c"><div class="big">⏳ Sala d'attesa</div>Ciao <b>${esc(nx)}</b> 👋<br><span class="mu">${net}</span>${pb&&pb.phase!=='setup'&&st.lob?'<br><span class="mu">Partita già iniziata: parteciperai alla prossima.</span>':''}<br><button onclick="pRename()">✏️ Cambia nome</button><details class="mu"><summary>🔧 Diagnostica</summary>Stanza: ${esc(ROOM)}<br>Stato: ${esc(NETST)}<br>Messaggi inviati: ${DIAG.sent}<br>Ultimo errore: ${esc(DIAG.err||'—')}<br>Internet: ${navigator.onLine===false?'assente':'ok'}</details></div>`}
+  if(ib&&ib.role){const r=ib.role;h+=`<div class="card c ${ty(r)==='T'||ty(r)==='O'?'good':'evil'}">${st.rev?`${tk(r,'lg')}<h2 style="border:0">${nm(r)}</h2><div class="${ty(r)==='T'||ty(r)==='O'?'g':'e'}">${TN[ty(r)]}</div><p>${esc(ib.ab)}</p>`:`<div class="tk lg back">🂠</div><p class="mu">Il tuo ruolo è segreto: scoprilo solo quando nessuno guarda.</p>`}<button class="on" onclick="pRev()">${st.rev?'Nascondi ruolo':'Scopri ruolo'}</button></div>`}
+  if(me&&!me.al)h+='<div class="card c">💀 Sei morto, ma puoi ancora parlare'+(me.vu?'.':' e votare una volta.')+'</div>';
+  if(ib&&ib.msgs&&ib.msgs.length)h+='<div class="card"><b>📨 Dal narratore</b>'+[...ib.msgs].reverse().map((m,i)=>`<div style="${i?'':'border-left:3px solid var(--gold);padding-left:8px'}">• ${esc(m.t)}</div>`).join('')+'</div>';
+  if(ib&&ib.ask&&st.sent!==ib.ask&&pb){const need=/FortuneTeller$/.test(ib.ask)?2:1;h+=`<div class="card c"><b>🌙 Scegli ${need===2?'DUE giocatori':'un giocatore'}</b><div class="chips">${pb.players.map((p,i)=>`<button class="${st.pick.includes(i)?'on':''}" onclick="pPick(${i})">${p.al?'':'💀 '}${esc(p.n)}</button>`).join('')}</div>${need===2?`<button class="on bigb" onclick="pConfirm()" ${st.pick.length===2?'':'disabled'}>Conferma la scelta</button>`:''}</div>`}
+  if(pb){h+=`<div class="card c"><div class="big">${pb.phase==='night'?'🌙 Notte':pb.phase==='day'?'☀️ Giorno':'⏳ Preparazione'} ${pb.phase==='setup'?'':pb.night}</div>${pb.tEnd&&pb.tEnd>Date.now()?`⏱ <b data-e="${pb.tEnd}">${fmt(pb.tEnd)}</b>`:''}${pb.phase==='day'&&pb.ann&&pb.ann.length?`<div class="warn">Stanotte è morto: ${pb.ann.map(esc).join(', ')}</div>`:''}<div>${pb.players.map(p=>`<span class="seat ${p.uid===UID?'me':''} ${p.al?'':'x'}">${p.al?'🟢':'💀'} ${esc(p.n)}${!p.al&&!p.vu?' 🗳':''}${p.on===0?' 📴':''}</span>`).join('')}</div></div>`;
+   if(pb.nom&&pb.phase==='day'){const ok=me&&(me.al||!me.vu),on=st.v===pb.nom.id;h+=`<div class="card c"><b>🗳 ${esc((pb.players[pb.nom.by]||{}).n)} nomina ${esc((pb.players[pb.nom.to]||{}).n)}</b>${pb.nom.v&&pb.nom.v.length?'<div class="mu">Hanno votato ('+pb.nom.v.length+'): '+pb.nom.v.map(esc).join(', ')+'</div>':''}<br>${ok?`<button class="${on?'on':''}" style="min-height:56px;font-size:18px" onclick="pVote(${pb.nom.id})">${on?'✔ Hai votato (tocca per ritirare)':'Voto per l’esecuzione'}</button>`:'<span class="mu">Non puoi votare.</span>'}</div>`}
+   if(pb.rv&&pb.rv.length)h+='<div class="card"><b>🎭 Rivelazione finale</b>'+pb.rv.map(x=>`<div>${tk(x.r)} ${esc(x.n)} — ${nm(x.r)}${x.f?' (pensava di essere '+nm(x.f)+')':''}</div>`).join('')+'</div>';
+   h+='<details class="card"><summary><b>📝 Appunti</b></summary>'+pb.players.map((p,i)=>`<div class="row"><span style="width:40%">${esc(p.n)}</span><input style="flex:1" value="${esc(st.notes[p.n]||'')}" placeholder="sospetti…" onchange="pNote(${i},this.value)"></div>`).join('')+'</details>'}
+  h+='<details class="card"><summary><b>❓ Come si gioca</b></summary><div class="mu">• Il bene vince se muore l’Imp (il Demone); il male se restano 2 vivi.<br>• Di giorno si parla, poi si nomina e si vota chi eseguire (basta una persona sola per giorno).<br>• Di notte il narratore ti scrive qui le tue informazioni: controlla i 📨.<br>• Puoi mentire quando vuoi: anche il bene può farlo.<br>• Da morto parli ancora e hai un solo voto.</div></details>';h+='<details class="card"><summary><b>📜 Personaggi di Trouble Brewing</b></summary>'+Object.keys(R).map(r=>`<div style="margin:6px 0">${tk(r)}<b>${nm(r)}</b> <span class="mu">(${TN[ty(r)]})</span><div class="mu">${R[r][1]}</div></div>`).join('')+'<p class="mu">Il bene vince se muore l’Imp; il male se restano 2 vivi.</p></details>';
+  h+='<div class="c"><button onclick="switchRole()">⇄ Cambia ruolo</button></div>';$('#main').innerHTML=h;restoreUI(sy)};
+ window.pJoin=async()=>{const n=($('#pn').value||'').trim().slice(0,20);if(!n)return;st.want=n;st.edit=false;try{localStorage.setItem('botcname',n)}catch(e){}drNow();try{await DB.doc('lobby/'+UID).set({name:n})}catch(e){}};
+ window.pRename=()=>{st.edit=true;try{st.name=localStorage.getItem('botcname')||''}catch(e){}drNow()};
+ window.pCancel=()=>{st.edit=false;drNow()};
+ window.pRev=()=>{st.rev=!st.rev;if(st.rev)try{Promise.resolve(DB.doc('evt/'+UID).set({x:'role'})).catch(()=>{})}catch(e){}drNow();if(st.rev){const t=++st.n;setTimeout(()=>{if(st.n===t){st.rev=0;drNow()}},10000)}};
+ window.pPick=i=>{const k=st.ib.ask,need=/FortuneTeller$/.test(k)?2:1;
+  if(need===1){if(!confirm('Scegli '+st.pb.players[i].n+'?'))return;st.sent=k;st.pick=[];drNow();try{DB.doc('acts/'+UID).set({k,t:i})}catch(e){}return}
+  const a=st.pick.indexOf(i);if(a>=0)st.pick.splice(a,1);else if(st.pick.length<2)st.pick.push(i);drNow()};
+ window.pConfirm=()=>{if(st.pick.length!==2)return;const k=st.ib.ask,t=[...st.pick];if(!confirm('Scegli '+t.map(i=>st.pb.players[i].n).join(' e ')+'?'))return;st.sent=k;st.pick=[];drNow();try{DB.doc('acts/'+UID).set({k,t})}catch(e){}};
+ window.pVote=async id=>{st.v=st.v===id?0:id;drNow();try{await DB.doc('votes/'+UID).set({nid:id,v:st.v?1:0})}catch(e){}};
+ window.pNote=(i,v)=>{const n=st.pb&&st.pb.players[i]?st.pb.players[i].n:'';if(!n)return;st.notes[n]=v;try{localStorage.setItem('botcn',JSON.stringify(st.notes))}catch(e){}};
+ window.reDraw=dr;setInterval(()=>dr(),20000);const sub=(p,f)=>DB.doc(p).onSnapshot(s=>{f(s.exists?s.data():null);dr()},()=>{});
+ sub('lobby/'+UID,d=>st.lob=d);sub('inbox/'+UID,d=>{if(d&&st.ib&&d.msgs.length>st.ib.msgs.length&&navigator.vibrate)navigator.vibrate(250);st.ib=d;if(d&&d.role){const key=d.role+'|'+(d.g||0);if(st.rx!==key){st.rx=key;try{Promise.resolve(DB.doc('evt/'+UID).set({x:'rx'})).catch(()=>{})}catch(e){}}}});sub('pub/state',d=>st.pb=d);try{const n=localStorage.getItem('botcname');if(n){st.name=n;st.want=n;Promise.resolve(DB.doc('lobby/'+UID).set({name:n})).catch(()=>{})}}catch(e){}dr()}
+const PIN='0408';let PINV='';
+const sget=k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},sset=(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}},sdel=k=>{try{sessionStorage.removeItem(k)}catch(e){}};
+function switchRole(){try{if(DB&&DB.bye)DB.bye()}catch(e){}sdel('botcrole');if(location.reload)location.reload()}
+function showStart(){$('#top').innerHTML='';$('#tabs').innerHTML='';$('#bn').innerHTML='';document.querySelector('h2').textContent='🕯️ Blood on the Clocktower';
+ $('#main').innerHTML='<div class="c"><div class="orn">❦ ❦ ❦</div><p class="sub">Un gioco di inganni e deduzione.<br>Chi trova il Demone prima che sia troppo tardi?</p></div><div class="card c"><b>Come vuoi giocare?</b><br><button class="on bigb" onclick="pickRole(\'g\')">🧑 Giocatore</button><div class="mu">Scrivi il tuo nome e attendi in sala d’attesa.</div><button class="bigb" onclick="showPin()">📖 Storyteller</button><div class="mu">Serve il PIN. Un solo Storyteller per partita.</div></div>'}
+function pickRole(r){sset('botcrole',r);boot(r)}
+function showPin(){PINV='';drawPin('')}
+function drawPin(msg){$('#main').innerHTML=`<div class="card c"><b>🔒 PIN dello Storyteller</b><div class="dots">${'●'.repeat(PINV.length)+'○'.repeat(4-PINV.length)}</div><div class="warn">${msg||'&nbsp;'}</div><div class="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button onclick="pinKey('${d}')">${d}</button>`).join('')}<button onclick="pinKey('b')">⌫</button><button onclick="pinKey('0')">0</button><span></span></div><button class="bigb" onclick="showStart()">← Indietro</button></div>`}
+function pinKey(k){if(k==='b'){PINV=PINV.slice(0,-1);drawPin('');return}if(PINV.length>=4)return;PINV+=k;if(PINV.length<4){drawPin('');return}if(PINV===PIN)pickRole('s');else{PINV='';drawPin('PIN errato, riprova')}}
+if(document.addEventListener)document.addEventListener('keydown',e=>{if(!document.querySelector('.dots'))return;if(/^\d$/.test(e.key))pinKey(e.key);else if(e.key==='Backspace')pinKey('b')});
+async function boot(mode){
+ const J=(location.hash.match(/j=([\w-]+)/)||[])[1];
+ try{
+  if(window.supabase&&SUPABASE_URL.startsWith('https://')&&!SUPABASE_URL.includes('INSERISCI')&&SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')&&!SUPABASE_PUBLISHABLE_KEY.includes('INSERISCI'))SB=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  else throw new Error('Configura SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY nel file index.html.');
+  if(typeof fetch==='function'&&SB){UID=uidL();if(mode==='s'){DB=mkHost();ISADM=true}else DB=mkClient()}
+ }catch(e){DIAG.err=String(e&&e.message||e);NETST='err:config';$('#top').innerHTML='';$('#tabs').innerHTML='';$('#bn').innerHTML='';$('#main').innerHTML='<div class="card"><b>⚙️ Configurazione del collegamento</b><p>Il gioco non è ancora collegato al progetto Supabase. Apri <code>index.html</code> e inserisci URL del progetto e chiave Publishable nelle due costanti indicate all’inizio del codice di rete.</p><p class="mu">Non inserire mai una chiave Secret o service_role nel sito pubblico.</p><p class="mu">Dettaglio: '+esc(DIAG.err)+'</p><button class="bigb" onclick="switchRole()">← Indietro</button></div>';return}
+ if(mode==='g'){if(!DB){$('#top').innerHTML='';$('#tabs').innerHTML='';$('#main').innerHTML='<div class="card c">Non riesco a raggiungere il servizio di connessione. Controlla internet e ricarica la pagina.<br><button class="bigb" onclick="switchRole()">← Indietro</button></div>';return}PA();return}
+ render();FLUSH=renderNow;
+ if(DB){const sb=(c,f)=>DB.collection(c).onSnapshot(q=>{const o={};q.docs.forEach(d=>o[d.id]=d.data());f(o)},()=>{});
+  sb('lobby',o=>{LOB=o;const ch=autoNames();if(S.tab==='lobby'||(ch&&S.tab==='setup'))render()});sb('acts',o=>{ACTS=o;if(S.tab==='night')render()});sb('votes',o=>{VOTES=o;if(S.cur)sync();if(S.tab==='day')render()});sync()}
+}
+(()=>{const r=sget('botcrole');if(r==='s'||r==='g')boot(r);else showStart()})();
+</script></body></html>
